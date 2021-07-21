@@ -18,7 +18,7 @@ public class AnimatedSprite extends Sprite {
         this.loop = loop;
         this.index = 0;
 
-        t = new Timer(this.timing, ae -> {
+        this.t = new Timer(this.timing, ae -> {
             if (GameGlobals.paused) {
                 return;
             }

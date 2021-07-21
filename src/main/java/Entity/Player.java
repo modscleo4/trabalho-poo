@@ -23,6 +23,7 @@ public class Player extends Entity {
     private int maxDamage = 10;
     private int takenDamage = 0;
     private Thread damageThread = null;
+    private Thread moveThread = null;
 
     public Player(int x, int y) {
         super(new AnimatedSprite[] {
@@ -143,23 +144,27 @@ public class Player extends Entity {
         this.resetAnimation(IDLE);
     }
 
+    @Override
     public void move(int dx, int dy) {
-        this.setCurrentSprite(MOVE);
-
-        if (dx > 0) {
-            this.setDirection("right");
-        } else if (dx < 0) {
-            this.setDirection("left");
-        } else if (dy < 0) {
-            this.setDirection("up");
-        } else if (dy > 0) {
-            this.setDirection("down");
+        if (this.moveThread != null) {
+            return;
         }
 
-        this.setX(this.getX() + dx);
-        this.setY(this.getY() + dy);
+        this.moveThread = new Thread(() -> {
+            this.setCurrentSprite(MOVE);
 
-        this.resetAnimation(IDLE);
+            super.move(dx, dy);
+
+            while (this.isMoving) {
+                //
+            }
+
+            this.resetAnimation(IDLE);
+
+            this.moveThread = null;
+        });
+
+        this.moveThread.start();
     }
 
     @Override

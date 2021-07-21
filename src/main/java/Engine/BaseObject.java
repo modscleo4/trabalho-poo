@@ -5,6 +5,8 @@ import java.awt.Graphics;
 public abstract class BaseObject {
     private int x;
     private int y;
+    private int screenX = -1;
+    private int screenY = -1;
     private int width = GameGlobals.SPRITE_WIDTH;
     private int height = GameGlobals.SPRITE_HEIGHT;
     private boolean solid;
@@ -14,10 +16,14 @@ public abstract class BaseObject {
     private boolean centerScreen = false;
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getScreenX() {
+        if (this.screenX != -1) {
+            return this.screenX;
+        }
+
         if (this.isAbsoluteCoords()) {
             if (this.centerScreen) {
                 return (GameGlobals.width - this.getWidth()) / 2;
@@ -35,11 +41,19 @@ public abstract class BaseObject {
         this.x = x;
     }
 
+    public void setScreenX(int screenX) {
+        this.screenX = screenX;
+    }
+
     public int getY() {
         return y;
     }
 
     public int getScreenY() {
+        if (this.screenY != -1) {
+            return this.screenY;
+        }
+
         if (this.isAbsoluteCoords()) {
             if (this.centerScreen) {
                 return (GameGlobals.height - this.getHeight()) / 2;
@@ -55,6 +69,10 @@ public abstract class BaseObject {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void setScreenY(int screenY) {
+        this.screenY = screenY;
     }
 
     public int getWidth() {

@@ -3,7 +3,7 @@ package Map;
 import java.util.List;
 
 import Engine.BaseObject;
-import Engine.GameGlobals;
+import Engine.Sound;
 import Engine.SoundManager;
 
 public class Map {
@@ -13,6 +13,7 @@ public class Map {
     private int maxY;
     private String bgMusic;
     private boolean bgPlaying = false;
+    private Sound bgMusicHandler;
 
     public Map(List<BaseObject>[] sprites, int maxX, int maxY, String bgMusic) {
         this.sprites = sprites;
@@ -22,21 +23,20 @@ public class Map {
     }
 
     public BaseObject[][][] mount() {
-        BaseObject[][][] ret = new BaseObject[this.maxX][this.maxY][this.sprites.length];
+        this.map = new BaseObject[this.maxX][this.maxY][this.sprites.length];
         for (int z = 0; z < this.sprites.length; z++) {
             List<BaseObject> zLayerSprites = this.sprites[z];
 
             for (BaseObject obj : zLayerSprites) {
-                ret[obj.getX()][obj.getY()][z] = obj;
+                this.map[obj.getX()][obj.getY()][z] = obj;
             }
         }
 
-        this.map = ret;
-        return ret;
+        return this.map;
     }
 
     public BaseObject[][][] getMap() {
-        return map;
+        return this.map;
     }
 
     public boolean collide(BaseObject obj, int x, int y) {
@@ -61,16 +61,16 @@ public class Map {
         return false;
     }
 
-    public boolean playerNear(int x, int y) {
+    public boolean objectNear(int x, int y, BaseObject obj) {
+        if (obj == null) {
+            return false;
+        }
+
         for (int z = 0; z < this.getMap()[x][y].length; z++) {
-            if (GameGlobals.player.equals(this.getMap()[x - 1][y][z])
-                    || GameGlobals.player.equals(this.getMap()[x - 1][y - 1][z])
-                    || GameGlobals.player.equals(this.getMap()[x][y - 1][z])
-                    || GameGlobals.player.equals(this.getMap()[x + 1][y - 1][z])
-                    || GameGlobals.player.equals(this.getMap()[x + 1][y][z])
-                    || GameGlobals.player.equals(this.getMap()[x + 1][y + 1][z])
-                    || GameGlobals.player.equals(this.getMap()[x][y + 1][z])
-                    || GameGlobals.player.equals(this.getMap()[x - 1][y + 1][z])) {
+            if (obj.equals(this.getMap()[x - 1][y][z]) || obj.equals(this.getMap()[x - 1][y - 1][z])
+                    || obj.equals(this.getMap()[x][y - 1][z]) || obj.equals(this.getMap()[x + 1][y - 1][z])
+                    || obj.equals(this.getMap()[x + 1][y][z]) || obj.equals(this.getMap()[x + 1][y + 1][z])
+                    || obj.equals(this.getMap()[x][y + 1][z]) || obj.equals(this.getMap()[x - 1][y + 1][z])) {
                 return true;
             }
         }
@@ -81,13 +81,20 @@ public class Map {
     public void playBG() {
         if (!this.bgPlaying) {
             this.bgPlaying = true;
-            SoundManager.playSound(bgMusic);
+
+            if (bgMusicHandler == null) {
+                bgMusicHandler = SoundManager.playSound(bgMusic, true);
+            } else {
+                bgMusicHandler.play();
+            }
         }
     }
 
     public void pauseBG() {
         if (this.bgPlaying) {
             this.bgPlaying = false;
+
+            bgMusicHandler.pause();
         }
     }
 }

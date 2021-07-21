@@ -27,6 +27,7 @@ hs_err_pid*
 
 # Build dir #
 build/
+bin/
 
 # Dotenv #
 .env

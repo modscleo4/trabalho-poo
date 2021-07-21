@@ -52,7 +52,7 @@ public class Slime extends Entity {
                     return;
                 }
 
-                if (!GameGlobals.map.playerNear(this.getX(), this.getY())) {
+                if (!GameGlobals.map.objectNear(this.getX(), this.getY(), GameGlobals.player)) {
                     return;
                 }
 
@@ -77,7 +77,7 @@ public class Slime extends Entity {
             return;
         }
 
-        if (!GameGlobals.map.playerNear(this.getX(), this.getY())) {
+        if (!GameGlobals.map.objectNear(this.getX(), this.getY(), GameGlobals.player)) {
             return;
         }
 

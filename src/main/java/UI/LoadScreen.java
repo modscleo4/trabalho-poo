@@ -1,6 +1,7 @@
 package UI;
 
 import java.awt.Graphics;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import Engine.SoundManager;
 import Engine.SpriteManager;
@@ -31,11 +32,18 @@ public class LoadScreen {
 
         if (!this.started) {
             new Thread(() -> {
+                int total = SpriteManager.filesInDirectory().size() + SoundManager.filesInDirectory().size();
                 this.progressBar.setPercentage(0);
-                SpriteManager.loadAll();
-                this.progressBar.setPercentage(50);
-                SoundManager.loadAll();
-                this.progressBar.setPercentage(100);
+
+                AtomicInteger p = new AtomicInteger(0);
+                SpriteManager.loadAll((i) -> {
+                    p.set(i);
+                    this.progressBar.setPercentage(i * 100 / total);
+                });
+
+                SoundManager.loadAll((i) -> {
+                    this.progressBar.setPercentage((p.get() + i) * 100 / total);
+                });
                 this.ended = true;
             }).start();
         }

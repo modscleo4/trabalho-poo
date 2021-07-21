@@ -22,7 +22,6 @@ import javax.swing.event.MouseInputListener;
 import Engine.BaseObject;
 import Engine.GameGlobals;
 import Engine.Settings;
-import Engine.SoundManager;
 import Engine.Sprite;
 import Entity.Player;
 import Entity.Slime;
@@ -140,7 +139,7 @@ public class Main extends JFrame {
                 g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
 
                 pauseUI.draw(g);
-                //GameGlobals.map.pauseBG();
+                GameGlobals.map.pauseBG();
                 //
             } else {
                 GameGlobals.internalClock++;

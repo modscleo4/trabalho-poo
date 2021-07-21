@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 
+import javax.swing.Timer;
 import javax.swing.event.MouseInputListener;
 
 import Engine.AnimatedSprite;
@@ -16,6 +17,7 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
     private int currentSprite;
     protected boolean interactibleWhenPaused = false;
     protected boolean useDirection = false;
+    protected boolean isMoving = false;
     private String direction = "down";
     private Thread resetThread = null;
 
@@ -327,6 +329,74 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
 
             sprite.setCenterScreen(centerScreen);
         }
+    }
+
+    @Override
+    public void setScreenX(int screenX) {
+        super.setScreenX(screenX);
+
+        for (AnimatedSprite sprite : this.getSprites()) {
+            if (sprite == null) {
+                continue;
+            }
+
+            sprite.setScreenX(screenX);
+        }
+    }
+
+    @Override
+    public void setScreenY(int screenY) {
+        super.setScreenY(screenY);
+
+        for (AnimatedSprite sprite : this.getSprites()) {
+            if (sprite == null) {
+                continue;
+            }
+
+            sprite.setScreenY(screenY);
+        }
+    }
+
+    public void move(int dx, int dy) {
+        this.isMoving = true;
+
+        if (dx > 0) {
+            this.setDirection("right");
+        } else if (dx < 0) {
+            this.setDirection("left");
+        } else if (dy < 0) {
+            this.setDirection("up");
+        } else if (dy > 0) {
+            this.setDirection("down");
+        }
+
+        this.setX(this.getX() + dx);
+        this.setY(this.getY() + dy);
+
+        int screenX = this.getScreenX();
+        int screenY = this.getScreenY();
+
+        this.setX(this.getX() - dx);
+        this.setY(this.getY() - dy);
+        this.setScreenX(this.getScreenX());
+        this.setScreenY(this.getScreenY());
+
+        this.setAbsoluteCoords(true);
+        new Timer(10, (ae) -> {
+            if (this.getScreenX() == screenX && this.getScreenY() == screenY) {
+                this.setAbsoluteCoords(false);
+                this.isMoving = false;
+                this.setScreenX(-1);
+                this.setScreenY(-1);
+                this.setX(this.getX() + dx);
+                this.setY(this.getY() + dy);
+                ((Timer) ae.getSource()).stop();
+                return;
+            }
+
+            this.setScreenX(this.getScreenX() + dx);
+            this.setScreenY(this.getScreenY() + dy);
+        }).start();
     }
 
     @Override

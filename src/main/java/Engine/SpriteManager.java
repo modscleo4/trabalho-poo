@@ -6,15 +6,22 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
 
 public final class SpriteManager {
     private static final Map<String, Image> sprites = new HashMap<>();
 
-    public static void loadAll() {
-        List<String> files = ResourceLoader.filesInDirectory("sprites/");
+    public static List<String> filesInDirectory() {
+        return ResourceLoader.filesInDirectory("sprites/");
+    }
+
+    public static void loadAll(Consumer<Integer> c) {
+        List<String> files = filesInDirectory();
+        int i = 1;
         for (String f : files) {
+            c.accept(i++);
             try {
                 BufferedInputStream s = new BufferedInputStream(
                         ResourceLoader.loadFile(String.format("sprites/%s", f)));
