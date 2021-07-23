@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 
 public class Sound {
@@ -17,6 +18,9 @@ public class Sound {
         this.c = AudioSystem.getClip(AudioSystem.getMixerInfo()[audioMixer]);
 
         this.c.open(ais);
+
+        FloatControl gainControl = (FloatControl) c.getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(-50f);
     }
 
     public void play() {
