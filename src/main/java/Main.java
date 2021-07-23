@@ -108,10 +108,10 @@ public class Main extends JFrame {
 
             GameGlobals.map.mount();
 
-            for (int i = 0; i < GameGlobals.map.getMap().length; i++) {
-                for (int j = 0; j < GameGlobals.map.getMap()[i].length; j++) {
-                    for (int z = 0; z < GameGlobals.map.getMap()[i][j].length; z++) {
-                        if (GameGlobals.map.getMap()[i][j][z] == null) {
+            for (int z = 0; z < GameGlobals.maxZ; z++) {
+                for (int i = 0; i < GameGlobals.map.getMap().length; i++) {
+                    for (int j = 0; j < GameGlobals.map.getMap()[i].length; j++) {
+                        if (z >= GameGlobals.map.getMap()[i][j].length || GameGlobals.map.getMap()[i][j][z] == null) {
                             continue;
                         }
 

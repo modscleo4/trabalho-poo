@@ -357,7 +357,7 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
         }
     }
 
-    public void move(int dx, int dy) {
+    public void move(int dx, int dy, Runnable callback) {
         this.isMoving = true;
 
         if (dx > 0) {
@@ -370,33 +370,39 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
             this.setDirection("down");
         }
 
-        this.setX(this.getX() + dx);
-        this.setY(this.getY() + dy);
-
         int screenX = this.getScreenX();
         int screenY = this.getScreenY();
 
-        this.setX(this.getX() - dx);
-        this.setY(this.getY() - dy);
-        this.setScreenX(this.getScreenX());
-        this.setScreenY(this.getScreenY());
+        this.setX(this.getX() + dx);
+        this.setY(this.getY() + dy);
+
+        int targetScreenX = this.getScreenX();
+        int targetScreenY = this.getScreenY();
+
+        this.setScreenX(screenX);
+        this.setScreenY(screenY);
 
         this.setAbsoluteCoords(true);
-        new Timer(10, (ae) -> {
-            if (this.getScreenX() == screenX && this.getScreenY() == screenY) {
+        new Timer(25, (ae) -> {
+            if (this.getScreenX() == targetScreenX && this.getScreenY() == targetScreenY) {
                 this.setAbsoluteCoords(false);
                 this.isMoving = false;
                 this.setScreenX(-1);
                 this.setScreenY(-1);
-                this.setX(this.getX() + dx);
-                this.setY(this.getY() + dy);
+                if (callback != null) {
+                    callback.run();
+                }
                 ((Timer) ae.getSource()).stop();
                 return;
             }
 
-            this.setScreenX(this.getScreenX() + dx);
-            this.setScreenY(this.getScreenY() + dy);
+            this.setScreenX(this.getScreenX() + 2 * dx);
+            this.setScreenY(this.getScreenY() + 2 * dy);
         }).start();
+    }
+
+    public void move(int dx, int dy) {
+        this.move(dx, dy, null);
     }
 
     @Override

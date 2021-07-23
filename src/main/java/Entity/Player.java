@@ -49,6 +49,10 @@ public class Player extends Entity {
     @Override
     public void handleKeyPressed(KeyEvent e) {
         if (e.getKeyCode() == Settings.KEY_MOVE_UP) {
+            if (this.moveThread != null) {
+                return;
+            }
+
             this.setDirection("up");
 
             if (this.getY() == 0 || GameGlobals.map.collide(this, this.getX(), this.getY() - 1)) {
@@ -57,6 +61,10 @@ public class Player extends Entity {
 
             this.move(0, -1);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_DOWN) {
+            if (this.moveThread != null) {
+                return;
+            }
+
             this.setDirection("down");
 
             if (this.getY() == GameGlobals.maxH - 1 || GameGlobals.map.collide(this, this.getX(), this.getY() + 1)) {
@@ -65,6 +73,10 @@ public class Player extends Entity {
 
             this.move(0, +1);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_LEFT) {
+            if (this.moveThread != null) {
+                return;
+            }
+
             this.setDirection("left");
 
             if (this.getX() == 0 || GameGlobals.map.collide(this, this.getX() - 1, this.getY())) {
@@ -74,6 +86,10 @@ public class Player extends Entity {
             //this.setFlipped(true);
             this.move(-1, 0);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_RIGHT) {
+            if (this.moveThread != null) {
+                return;
+            }
+
             this.setDirection("right");
 
             if (this.getX() == GameGlobals.maxW - 1 || GameGlobals.map.collide(this, this.getX() + 1, this.getY())) {
@@ -146,22 +162,14 @@ public class Player extends Entity {
 
     @Override
     public void move(int dx, int dy) {
-        if (this.moveThread != null) {
-            return;
-        }
-
         this.moveThread = new Thread(() -> {
             this.setCurrentSprite(MOVE);
 
-            super.move(dx, dy);
+            super.move(dx, dy, () -> {
+                this.resetAnimation(IDLE);
 
-            while (this.isMoving) {
-                //
-            }
-
-            this.resetAnimation(IDLE);
-
-            this.moveThread = null;
+                this.moveThread = null;
+            });
         });
 
         this.moveThread.start();
