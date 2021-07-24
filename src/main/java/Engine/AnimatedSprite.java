@@ -4,16 +4,17 @@ import java.awt.Graphics;
 import javax.swing.Timer;
 
 public class AnimatedSprite extends Sprite {
-    private String sprites[];
+    private String spritesPath;
+    private String[] sprites;
     private boolean animating;
     private boolean loop;
     private int timing;
     private int index;
     Timer t;
 
-    public AnimatedSprite(String sprites[], boolean loop, int timing, int x, int y, boolean solid) {
-        super(sprites[0], x, y, solid);
-        this.sprites = sprites;
+    public AnimatedSprite(String spritesPath, boolean loop, int timing, int x, int y, boolean solid) {
+        super("", x, y, solid);
+        this.spritesPath = spritesPath;
         this.timing = timing;
         this.loop = loop;
         this.index = 0;
@@ -23,7 +24,7 @@ public class AnimatedSprite extends Sprite {
                 return;
             }
 
-            if (!this.loop && this.index == this.sprites.length - 1) {
+            if (!this.loop && this.index == this.getSprites().length - 1) {
                 this.stop();
                 ((Timer) ae.getSource()).stop();
                 return;
@@ -31,10 +32,23 @@ public class AnimatedSprite extends Sprite {
 
             this.index++;
 
-            this.index %= this.sprites.length;
+            this.index %= this.getSprites().length;
 
-            this.setPath(this.sprites[this.index]);
+            this.setPath(this.getSprites()[this.index]);
         });
+    }
+
+    public String[] getSprites() {
+        if (this.sprites == null) {
+            if (this.isUsingDirection()) {
+                this.sprites = SpriteManager.spritesInDirectory(this.spritesPath + "/" + this.getDirection())
+                        .toArray(new String[0]);
+            } else {
+                this.sprites = SpriteManager.spritesInDirectory(this.spritesPath).toArray(new String[0]);
+            }
+        }
+
+        return this.sprites;
     }
 
     public void reset() {
@@ -42,13 +56,13 @@ public class AnimatedSprite extends Sprite {
     }
 
     public void resetIfEnded() {
-        if (this.index == this.sprites.length - 1) {
+        if (this.index == this.getSprites().length - 1) {
             this.reset();
         }
     }
 
     public void animate() {
-        if (this.animating || !this.loop && this.index == this.sprites.length) {
+        if (this.animating || !this.loop && this.index == this.getSprites().length) {
             return;
         }
 
@@ -64,7 +78,7 @@ public class AnimatedSprite extends Sprite {
     }
 
     public int length() {
-        return this.sprites.length;
+        return this.getSprites().length;
     }
 
     public int getIndex() {
@@ -73,7 +87,15 @@ public class AnimatedSprite extends Sprite {
 
     @Override
     public String getPath() {
-        return this.sprites[this.index];
+        return this.getSprites()[this.index];
+    }
+
+    @Override
+    public void setDirection(String direction) {
+        super.setDirection(direction);
+
+        this.sprites = SpriteManager.spritesInDirectory(this.spritesPath + "/" + this.getDirection())
+                .toArray(new String[0]);
     }
 
     @Override

@@ -16,7 +16,16 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class ResourceLoader {
-    public static List<String> filesInDirectory(String directory) {
+    public static String getBaseName(String fileName) {
+        int index = fileName.lastIndexOf('.');
+        if (index == -1) {
+            return fileName;
+        } else {
+            return fileName.substring(0, index);
+        }
+    }
+
+    public static List<String> filesInDirectory(String directory, boolean withExtension) {
         List<String> ret = new ArrayList<>();
 
         try {
@@ -38,7 +47,12 @@ public class ResourceLoader {
             }
 
             while (i.hasNext()) {
-                ret.add(i.next().getFileName().toString());
+                String fName = i.next().getFileName().toString();
+                if (!withExtension) {
+                    fName = ResourceLoader.getBaseName(fName);
+                }
+
+                ret.add(fName);
             }
 
             s.close();
@@ -51,6 +65,10 @@ public class ResourceLoader {
         }
 
         return ret;
+    }
+
+    public static List<String> filesInDirectory(String directory) {
+        return ResourceLoader.filesInDirectory(directory, true);
     }
 
     public static InputStream loadFile(String file) {

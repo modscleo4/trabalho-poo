@@ -26,18 +26,10 @@ public class Slime extends Entity {
     private Timer internalTimer;
 
     public Slime(int x, int y, boolean disableTimer) {
-        super(new AnimatedSprite[] {
-                new AnimatedSprite(
-                        new String[] { "slime/slime_idle0", "slime/slime_idle1", "slime/slime_idle2",
-                                "slime/slime_idle3", "slime/slime_idle4", "slime/slime_idle5", },
-                        true, 100, x, y, true),
-                new AnimatedSprite(new String[] { "slime/slime_move0", "slime/slime_move1", "slime/slime_move2",
-                        "slime/slime_move3", "slime/slime_move4", }, false, 100, x, y, true),
-                new AnimatedSprite(new String[] { "slime/slime_hit0", "slime/slime_hit1", }, false, 100, x, y, true),
-                new AnimatedSprite(new String[] { "slime/slime_jump0", "slime/slime_jump1", "slime/slime_jump2",
-                        "slime/slime_jump3", "slime/slime_jump4", "slime/slime_jump5", "slime/slime_jump6",
-                        "slime/slime_jump7", }, false, 100, x, y, true) },
-                x, y);
+        super(new AnimatedSprite[] { new AnimatedSprite("slime/idle", true, 100, x, y, true),
+                new AnimatedSprite("slime/move", false, 100, x, y, true),
+                new AnimatedSprite("slime/hit", false, 100, x, y, true),
+                new AnimatedSprite("slime/jump", false, 100, x, y, true) }, x, y);
         this.setSolid(true);
         this.setUseDirection(true);
         this.setDirection("right");

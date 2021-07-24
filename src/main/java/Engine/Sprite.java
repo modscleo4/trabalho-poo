@@ -25,9 +25,6 @@ public class Sprite extends BaseObject {
 
     public Image getImage() {
         String path = this.getPath();
-        if (this.isUsingDirection()) {
-            path += "_" + this.getDirection();
-        }
 
         return SpriteManager.getImage(path);
     }

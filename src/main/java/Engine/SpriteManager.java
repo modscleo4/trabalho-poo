@@ -13,6 +13,15 @@ import javax.imageio.ImageIO;
 public final class SpriteManager {
     private static final Map<String, Image> sprites = new HashMap<>();
 
+    public static List<String> spritesInDirectory(String path) {
+        List<String> files = ResourceLoader.filesInDirectory("sprites/" + path, false);
+        for (int i = 0; i < files.size(); i++) {
+            files.set(i, path + "/" + files.get(i));
+        }
+
+        return files;
+    }
+
     public static List<String> filesInDirectory() {
         return ResourceLoader.filesInDirectory("sprites/");
     }

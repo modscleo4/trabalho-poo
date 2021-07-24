@@ -26,21 +26,9 @@ public class Player extends Entity {
     private Thread moveThread = null;
 
     public Player(int x, int y) {
-        super(new AnimatedSprite[] {
-                new AnimatedSprite(
-                        new String[] { "player/player_idle0", "player/player_idle1", "player/player_idle2",
-                                "player/player_idle3", "player/player_idle4", "player/player_idle5", },
-                        true, 100, x, y, true),
-                new AnimatedSprite(
-                        new String[] { "player/player_move0", "player/player_move1", "player/player_move2",
-                                "player/player_move3", "player/player_move4", "player/player_move5", },
-                        false, 100, x, y, true),
-                new AnimatedSprite(new String[] { "player/player_hit0", "player/player_hit1", }, false, 100, x, y,
-                        true),
-                new AnimatedSprite(new String[] { "player/player_jump0", "player/player_jump1", "player/player_jump2",
-                        "player/player_jump3", "player/player_jump4", "player/player_jump5", "player/player_jump6",
-                        "player/player_jump7", }, false, 100, x, y, true) },
-                x, y);
+        super(new AnimatedSprite[] { new AnimatedSprite("player/idle", true, 100, x, y, true),
+                new AnimatedSprite("player/move", false, 100, x, y, true),
+                new AnimatedSprite("player/hit", false, 100, x, y, true) }, x, y);
         this.setSolid(true);
         this.setUseDirection(true);
         this.setWidth(this.getHeight() / 24 * 16);
