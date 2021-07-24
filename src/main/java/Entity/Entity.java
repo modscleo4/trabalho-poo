@@ -243,22 +243,28 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
         }
     }
 
-    protected void resetAnimation(int index) {
+    protected void cancelResetAnimation() {
         if (this.resetThread != null) {
             this.resetThread.interrupt();
             this.resetThread = null;
         }
+    }
+
+    protected void resetAnimation(int index) {
+        this.cancelResetAnimation();
 
         this.resetThread = new Thread(() -> {
             try {
-                Thread.sleep(100 * (this.getSprite().length() - this.getSprite().getIndex()));
+                Thread.sleep(100 * (this.getSprite().length() - this.getSprite().getIndex() - 1));
             } catch (InterruptedException e) {
                 return;
             }
 
-            if (!GameGlobals.paused) {
-                this.setCurrentSprite(index);
+            while (GameGlobals.paused) {
+                //
             }
+
+            this.setCurrentSprite(index);
         });
 
         this.resetThread.start();
@@ -358,6 +364,7 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
     }
 
     public void move(int dx, int dy, Runnable callback) {
+        this.cancelResetAnimation();
         this.isMoving = true;
 
         if (dx > 0) {
@@ -369,6 +376,8 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
         } else if (dy > 0) {
             this.setDirection("down");
         }
+
+        this.getSprite().reset();
 
         int screenX = this.getScreenX();
         int screenY = this.getScreenY();
@@ -383,7 +392,11 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
         this.setScreenY(screenY);
 
         this.setAbsoluteCoords(true);
-        new Timer(25, (ae) -> {
+        new Timer(20, (ae) -> {
+            if (GameGlobals.paused) {
+                return;
+            }
+
             if (this.getScreenX() == targetScreenX && this.getScreenY() == targetScreenY) {
                 this.setAbsoluteCoords(false);
                 this.isMoving = false;
