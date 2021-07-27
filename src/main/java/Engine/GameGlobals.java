@@ -8,6 +8,7 @@ import javax.swing.event.MouseInputListener;
 
 import Entity.Player;
 import Map.Map;
+import UI.UILayer;
 
 public final class GameGlobals {
     public static boolean paused = false;
@@ -32,4 +33,6 @@ public final class GameGlobals {
 
     public static final List<KeyListener> keyListeners = new ArrayList<>();
     public static final List<MouseInputListener> mouseInputListeners = new ArrayList<>();
+
+    public static final UILayer uiLayer = new UILayer();
 }

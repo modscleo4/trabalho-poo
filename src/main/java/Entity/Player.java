@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import Engine.AnimatedSprite;
 import Engine.GameGlobals;
@@ -167,30 +168,34 @@ public class Player extends Entity {
     public void draw(Graphics g) {
         super.draw(g);
 
-        int x = this.getScreenX() + 10;
-        int y = this.getScreenY() - 5;
+        AtomicInteger x = new AtomicInteger(this.getScreenX() + 10);
+        AtomicInteger y = new AtomicInteger(this.getScreenY() - 5);
 
-        if (x < 0) {
-            x = 0;
-        } else if (x + 15 > GameGlobals.width) {
-            x -= 15;
+        if (x.get() < 0) {
+            x.set(0);
+        } else if (x.get() + 15 > GameGlobals.width) {
+            x.set(x.get() - 15);
         }
 
-        if (y < 0) {
-            y = 0;
-        } else if (y + 15 > GameGlobals.height) {
-            y -= 15;
+        if (y.get() < 0) {
+            y.set(0);
+        } else if (y.get() + 15 > GameGlobals.height) {
+            y.set(y.get() - 15);
         }
 
-        if (this.takenDamage > 0) {
-            g.setColor(Color.RED);
-            g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
-            g.drawString("-" + this.takenDamage, x, y);
-        } else if (this.takenDamage < 0) {
-            g.setColor(Color.GREEN);
-            g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
-            g.drawString("+" + this.takenDamage, x, y);
-        }
+        GameGlobals.uiLayer.addLayer(g2 -> {
+            this.drawLifeBar(g2);
+
+            if (this.takenDamage > 0) {
+                g2.setColor(Color.RED);
+                g2.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
+                g2.drawString("-" + this.takenDamage, x.get(), y.get());
+            } else if (this.takenDamage < 0) {
+                g2.setColor(Color.GREEN);
+                g2.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
+                g2.drawString("+" + this.takenDamage, x.get(), y.get());
+            }
+        });
     }
 
     public void drawLifeBar(Graphics g) {

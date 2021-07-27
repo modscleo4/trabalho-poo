@@ -120,7 +120,7 @@ public class Main extends JFrame {
                 }
             }
 
-            GameGlobals.player.drawLifeBar(g);
+            GameGlobals.uiLayer.draw(g);
 
             if (GameGlobals.result.equals("won")) {
                 g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
@@ -153,6 +153,8 @@ public class Main extends JFrame {
 
             try {
                 g.clearRect(0, 0, this.getWidth(), this.getHeight());
+
+                GameGlobals.uiLayer.clear();
 
                 this.draw(g);
 
