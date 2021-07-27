@@ -1,0 +1,7 @@
+aubrey :  48x48
+omori: 48x48
+fishbunny: 32x32
+snowpile: 32x32
+background_casa: 280x220
+background_arena: 320x180
+
