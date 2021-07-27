@@ -1,5 +1,9 @@
 aubrey :  48x48
+aubrey_icon: 24x24
+aubrey_talk: 106x106
 omori: 48x48
+omori_icon: 24x24
+omori_talk: 106x106
 fishbunny: 32x32
 snowpile: 32x32
 background_casa: 280x220
