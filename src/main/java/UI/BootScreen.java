@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import Engine.GameGlobals;
 import Engine.SoundManager;
 import Entity.Slime;
+import Map.MapManager;
 
 public class BootScreen {
     private boolean started = false;
@@ -44,6 +45,9 @@ public class BootScreen {
                 }
 
                 this.ended = true;
+
+                GameGlobals.map = MapManager.map1;
+                GameGlobals.loaded = true;
             }).start();
         }
 

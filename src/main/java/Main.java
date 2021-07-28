@@ -1,7 +1,9 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -10,8 +12,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -19,13 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
 
-import Engine.BaseObject;
 import Engine.GameGlobals;
 import Engine.Settings;
-import Engine.Sprite;
-import Entity.Player;
-import Entity.Slime;
-import Map.Map;
 import UI.BootScreen;
 import UI.EndUI;
 import UI.LoadScreen;
@@ -35,37 +30,14 @@ public class Main extends JFrame {
     Desenho des = new Desenho();
 
     class Desenho extends JPanel {
-        private List<BaseObject>[] layers;
-
-        private Slime slime;
-
         private BootScreen bootScreen = new BootScreen();
         private PauseUI pauseUI = new PauseUI();
         private EndUI endUI = new EndUI();
         private LoadScreen loadScreen = new LoadScreen();
 
         Desenho() {
-            this.layers = new ArrayList[GameGlobals.maxZ];
-
-            for (int z = 0; z < layers.length; z++) {
-                this.layers[z] = new ArrayList<>();
-            }
-
-            for (int i = 0; i < GameGlobals.maxW; i++) {
-                for (int j = 0; j < GameGlobals.maxH; j++) {
-                    this.layers[0].add(new Sprite("floor", i, j, false));
-                }
-            }
-
-            GameGlobals.player = new Player(1, 1);
-            this.slime = new Slime(5, 5, false);
-
-            this.layers[2].add(GameGlobals.player);
-            this.layers[1].add(this.slime);
-
+            this.setMaximumSize(new Dimension(GameGlobals.width, GameGlobals.height));
             this.setPreferredSize(new Dimension(GameGlobals.width, GameGlobals.height));
-
-            GameGlobals.map = new Map(this.layers, GameGlobals.maxW, GameGlobals.maxH, "bg1");
 
             this.addMouseListener(new MouseAdapter() {
                 @Override
@@ -92,6 +64,12 @@ public class Main extends JFrame {
             });
         }
 
+        private void doGameLoop() {
+            if (GameGlobals.loaded) {
+                GameGlobals.map.mount();
+            }
+        }
+
         private void draw(Graphics g) {
             g.setColor(Color.BLACK);
             g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -105,8 +83,6 @@ public class Main extends JFrame {
                 this.bootScreen.draw(g);
                 return;
             }
-
-            GameGlobals.map.mount();
 
             for (int z = 0; z < GameGlobals.maxZ; z++) {
                 for (int i = 0; i < GameGlobals.map.getMap().length; i++) {
@@ -155,6 +131,8 @@ public class Main extends JFrame {
                 g.clearRect(0, 0, this.getWidth(), this.getHeight());
 
                 GameGlobals.uiLayer.clear();
+
+                this.doGameLoop();
 
                 this.draw(g);
 
@@ -216,7 +194,9 @@ public class Main extends JFrame {
     Main() {
         super("Trabalho");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.add(des);
+        this.getContentPane().setLayout(new GridBagLayout());
+        this.getContentPane().setBackground(Color.BLACK);
+        this.getContentPane().add(des);
         this.pack();
         this.setLocationRelativeTo(null);
         this.setResizable(false);

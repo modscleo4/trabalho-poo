@@ -11,6 +11,7 @@ import Map.Map;
 import UI.UILayer;
 
 public final class GameGlobals {
+    public static boolean loaded = false;
     public static boolean paused = false;
 
     public static final int MAX_FPS = 60;
