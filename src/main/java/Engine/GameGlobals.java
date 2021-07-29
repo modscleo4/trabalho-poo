@@ -31,6 +31,7 @@ public final class GameGlobals {
     public static String result = "running";
 
     public static Player player;
+    public static Player player2;
 
     public static final List<KeyListener> keyListeners = new ArrayList<>();
     public static final List<MouseInputListener> mouseInputListeners = new ArrayList<>();

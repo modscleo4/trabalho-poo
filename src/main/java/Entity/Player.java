@@ -13,82 +13,47 @@ import Engine.Settings;
 import Engine.SoundManager;
 import Engine.Sprite;
 
-public class Player extends Entity {
+public abstract class Player extends GameEntity {
     public static final int IDLE = 0;
     public static final int MOVE = 1;
     public static final int HIT = 2;
-    public static final int JUMP = 3;
+    public static final int ATTACK = 3;
 
+    private String name;
     private int life = 20;
     private int minDamage = 5;
     private int maxDamage = 10;
     private int takenDamage = 0;
     private Thread damageThread = null;
+    private Thread attackThread = null;
     private Thread moveThread = null;
 
-    public Player(int x, int y) {
-        super(new AnimatedSprite[] { new AnimatedSprite("player/idle", true, 100, x, y, true),
-                new AnimatedSprite("player/move", false, 100, x, y, true),
-                new AnimatedSprite("player/hit", false, 100, x, y, true) }, x, y);
+    public Player(int x, int y, String name) {
+        super(new AnimatedSprite[] { new AnimatedSprite(String.format("%s/idle", name), true, 100, x, y, true),
+                new AnimatedSprite(String.format("%s/move", name), false, 100, x, y, true),
+                new AnimatedSprite(String.format("%s/hit", name), false, 100, x, y, true),
+                new AnimatedSprite(String.format("%s/attack", name), false, 100, x, y, true) }, x, y);
+        this.setName(name);
         this.setSolid(true);
         this.setUseDirection(true);
-        this.setWidth(this.getHeight() / 24 * 16);
     }
 
     @Override
     public void handleKeyPressed(KeyEvent e) {
+        if (GameGlobals.player != this) {
+            return;
+        }
+
         if (e.getKeyCode() == Settings.KEY_MOVE_UP) {
-            if (this.moveThread != null) {
-                return;
-            }
-
-            this.setDirection("up");
-
-            if (this.getY() == 0 || GameGlobals.map.collide(this, this.getX(), this.getY() - 1)) {
-                return;
-            }
-
             this.move(0, -1);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_DOWN) {
-            if (this.moveThread != null) {
-                return;
-            }
-
-            this.setDirection("down");
-
-            if (this.getY() == GameGlobals.maxH - 1 || GameGlobals.map.collide(this, this.getX(), this.getY() + 1)) {
-                return;
-            }
-
             this.move(0, +1);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_LEFT) {
-            if (this.moveThread != null) {
-                return;
-            }
-
-            this.setDirection("left");
-
-            if (this.getX() == 0 || GameGlobals.map.collide(this, this.getX() - 1, this.getY())) {
-                return;
-            }
-
-            //this.setFlipped(true);
             this.move(-1, 0);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_RIGHT) {
-            if (this.moveThread != null) {
-                return;
-            }
-
-            this.setDirection("right");
-
-            if (this.getX() == GameGlobals.maxW - 1 || GameGlobals.map.collide(this, this.getX() + 1, this.getY())) {
-                return;
-            }
-
-            //this.setFlipped(false);
             this.move(+1, 0);
-        } else if (e.getKeyCode() == Settings.KEY_JUMP) {
-            this.jump();
+        } else if (e.getKeyCode() == Settings.KEY_ATTACK) {
+            this.attack();
         }
     }
 
@@ -143,18 +108,13 @@ public class Player extends Entity {
         this.resetAnimation(IDLE);
     }
 
-    public void jump() {
-        this.setCurrentSprite(JUMP);
-
-        this.resetAnimation(IDLE);
-    }
-
-    @Override
     public void move(int dx, int dy) {
-        this.moveThread = new Thread(() -> {
-            this.setCurrentSprite(MOVE);
+        if (this.moveThread != null || this.attackThread != null) {
+            return;
+        }
 
-            super.move(dx, dy, () -> {
+        this.moveThread = new Thread(() -> {
+            super.move(MOVE, dx, dy, () -> {
                 this.resetAnimation(IDLE);
 
                 this.moveThread = null;
@@ -162,6 +122,56 @@ public class Player extends Entity {
         });
 
         this.moveThread.start();
+    }
+
+    public void attack() {
+        if (this.moveThread != null || this.attackThread != null) {
+            return;
+        }
+
+        int x = this.getX();
+        int y = this.getY();
+
+        if (this.useDirection) {
+            if (this.getDirection().equals("up")) {
+                y--;
+            } else if (this.getDirection().equals("down")) {
+                y++;
+            } else if (this.getDirection().equals("left")) {
+                x--;
+            } else if (this.getDirection().equals("right")) {
+                x++;
+            }
+        }
+
+        if (GameGlobals.map.enemyAt(x, y) == null) {
+            return;
+        }
+
+        GameGlobals.map.enemyAt(x, y).hit(this.getDamage());
+
+        this.attackThread = new Thread(() -> {
+            this.setCurrentSprite(ATTACK);
+
+            try {
+                Thread.sleep(this.getSprite().getTiming() * (this.getSprite().length() - this.getSprite().getIndex()));
+            } catch (InterruptedException e) {
+                //
+            }
+
+            this.resetAnimation(IDLE);
+            this.attackThread = null;
+        });
+
+        this.attackThread.start();
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

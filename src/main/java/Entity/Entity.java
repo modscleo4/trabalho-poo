@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 
-import javax.swing.Timer;
 import javax.swing.event.MouseInputListener;
 
 import Engine.AnimatedSprite;
@@ -16,10 +15,6 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
     private AnimatedSprite[] sprites;
     private int currentSprite;
     protected boolean interactibleWhenPaused = false;
-    protected boolean useDirection = false;
-    protected boolean isMoving = false;
-    private String direction = "down";
-    private Thread resetThread = null;
 
     public Entity(AnimatedSprite[] sprites, int x, int y) {
         this.sprites = sprites;
@@ -152,10 +147,12 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
         return this.currentSprite;
     }
 
-    protected void setCurrentSprite(int currentSprite) {
+    protected void setCurrentSprite(int currentSprite, boolean animate) {
         if (currentSprite < 0 || currentSprite > this.sprites.length - 1) {
             return;
         }
+
+        this.getSprite().stop();
 
         if (this.currentSprite != currentSprite) {
             this.currentSprite = currentSprite;
@@ -163,6 +160,14 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
         } else {
             this.getSprite().resetIfEnded();
         }
+
+        if (animate && !this.getSprite().isAnimating()) {
+            this.getSprite().animate();
+        }
+    }
+
+    protected void setCurrentSprite(int currentSprite) {
+        this.setCurrentSprite(currentSprite, true);
     }
 
     @Override
@@ -243,72 +248,8 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
         }
     }
 
-    protected void cancelResetAnimation() {
-        if (this.resetThread != null) {
-            this.resetThread.interrupt();
-            this.resetThread = null;
-        }
-    }
-
-    protected void resetAnimation(int index) {
-        this.cancelResetAnimation();
-
-        this.resetThread = new Thread(() -> {
-            try {
-                Thread.sleep(100 * (this.getSprite().length() - this.getSprite().getIndex() - 1));
-            } catch (InterruptedException e) {
-                return;
-            }
-
-            while (GameGlobals.paused) {
-                //
-            }
-
-            this.setCurrentSprite(index);
-        });
-
-        this.resetThread.start();
-    }
-
     public AnimatedSprite getSprite() {
         return this.getSprites()[this.getCurrentSprite()];
-    }
-
-    public String getDirection() {
-        return this.direction;
-    }
-
-    public void setDirection(String direction) {
-        if (!direction.equals("right") && !direction.equals("left") && !direction.equals("up")
-                && !direction.equals("down")) {
-            return;
-        }
-
-        this.direction = direction;
-
-        for (AnimatedSprite sprite : this.getSprites()) {
-            if (sprite == null) {
-                continue;
-            }
-
-            sprite.setDirection(direction);
-        }
-    }
-
-    public boolean isUsingDirection() {
-        return this.useDirection;
-    }
-
-    public void setUseDirection(boolean useDirection) {
-        this.useDirection = useDirection;
-
-        for (AnimatedSprite sprite : this.getSprites()) {
-            if (sprite == null) {
-                continue;
-            }
-
-            sprite.setUseDirection(useDirection);
-        }
     }
 
     @Override
@@ -363,61 +304,6 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
         }
     }
 
-    public void move(int dx, int dy, Runnable callback) {
-        this.cancelResetAnimation();
-        this.isMoving = true;
-
-        if (dx > 0) {
-            this.setDirection("right");
-        } else if (dx < 0) {
-            this.setDirection("left");
-        } else if (dy < 0) {
-            this.setDirection("up");
-        } else if (dy > 0) {
-            this.setDirection("down");
-        }
-
-        this.getSprite().reset();
-
-        int screenX = this.getScreenX();
-        int screenY = this.getScreenY();
-
-        this.setX(this.getX() + dx);
-        this.setY(this.getY() + dy);
-
-        int targetScreenX = this.getScreenX();
-        int targetScreenY = this.getScreenY();
-
-        this.setScreenX(screenX);
-        this.setScreenY(screenY);
-
-        this.setAbsoluteCoords(true);
-        new Timer(20, (ae) -> {
-            if (GameGlobals.paused) {
-                return;
-            }
-
-            if (this.getScreenX() == targetScreenX && this.getScreenY() == targetScreenY) {
-                this.setAbsoluteCoords(false);
-                this.isMoving = false;
-                this.setScreenX(-1);
-                this.setScreenY(-1);
-                if (callback != null) {
-                    callback.run();
-                }
-                ((Timer) ae.getSource()).stop();
-                return;
-            }
-
-            this.setScreenX(this.getScreenX() + 2 * dx);
-            this.setScreenY(this.getScreenY() + 2 * dy);
-        }).start();
-    }
-
-    public void move(int dx, int dy) {
-        this.move(dx, dy, null);
-    }
-
     @Override
     public void draw(Graphics g) {
         AnimatedSprite sprite = this.getSprite();
@@ -428,5 +314,17 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
         sprite.setX(this.getX());
         sprite.setY(this.getY());
         sprite.draw(g);
+    }
+
+    public void destroy() {
+        GameGlobals.keyListeners.remove(this);
+        GameGlobals.mouseInputListeners.remove(this);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        this.destroy();
+
+        super.finalize();
     }
 }

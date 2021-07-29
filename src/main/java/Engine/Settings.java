@@ -18,6 +18,7 @@ public class Settings {
     public static int KEY_JUMP = KeyEvent.VK_SPACE;
 
     public static int KEY_INTERACT = KeyEvent.VK_ENTER;
+    public static int KEY_ATTACK = KeyEvent.VK_C;
 
     public static int KEY_INVENTORY = KeyEvent.VK_E;
 

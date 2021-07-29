@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -28,6 +27,7 @@ import UI.PauseUI;
 
 public class Main extends JFrame {
     Desenho des = new Desenho();
+    public String globMove;
 
     class Desenho extends JPanel {
         private BootScreen bootScreen = new BootScreen();
@@ -67,6 +67,7 @@ public class Main extends JFrame {
         private void doGameLoop() {
             if (GameGlobals.loaded) {
                 GameGlobals.map.mount();
+                GameGlobals.map.animateAllSprites();
             }
         }
 
@@ -180,6 +181,7 @@ public class Main extends JFrame {
                             Runtime.getRuntime().maxMemory() / 1024 / 1024), 0, 60);
                     g.drawString(String.format("X/Y: %d/%d", GameGlobals.player.getX(), GameGlobals.player.getY()), 0,
                             72);
+                    g.drawString(String.format("Sprite: %s", GameGlobals.player.getSprite().getPath()), 0, 84);
                 }
 
                 this.repaint();
@@ -204,6 +206,7 @@ public class Main extends JFrame {
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
+                globMove = KeyEvent.getKeyText(e.getKeyCode());
                 if (e.getKeyCode() == KeyEvent.VK_ENTER && e.isAltDown()) {
                     dispose();
 

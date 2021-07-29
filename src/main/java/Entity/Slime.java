@@ -3,16 +3,15 @@ package Entity;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.Timer;
 
+import Engine.AnimatedSprite;
 import Engine.GameGlobals;
 import Engine.SoundManager;
-import Engine.AnimatedSprite;
 
-public class Slime extends Entity {
+public class Slime extends Enemy {
     public static final int IDLE = 0;
     public static final int MOVE = 1;
     public static final int HIT = 2;
@@ -32,8 +31,8 @@ public class Slime extends Entity {
                 new AnimatedSprite("slime/hit", false, 100, x, y, true),
                 new AnimatedSprite("slime/jump", false, 100, x, y, true) }, x, y);
         this.setSolid(true);
-        this.setUseDirection(true);
         this.setDirection("right");
+        this.setUseDirection(true);
 
         if (!disableTimer) {
             this.internalTimer = new Timer(500, ae -> {
@@ -62,23 +61,6 @@ public class Slime extends Entity {
             });
             this.internalTimer.start();
         }
-    }
-
-    @Override
-    public void handleMousePressed(MouseEvent e) {
-        if (GameGlobals.paused) {
-            return;
-        }
-
-        if (!GameGlobals.map.objectNear(this.getX(), this.getY(), GameGlobals.player)) {
-            return;
-        }
-
-        if (!GameGlobals.player.isVisible()) {
-            return;
-        }
-
-        this.hit(GameGlobals.player.getDamage());
     }
 
     public int getLife() {
@@ -119,6 +101,7 @@ public class Slime extends Entity {
         return (int) Math.ceil(this.minDamage + Math.random() * (this.maxDamage - this.minDamage));
     }
 
+    @Override
     public void hit(int damage) {
         this.setCurrentSprite(HIT);
 

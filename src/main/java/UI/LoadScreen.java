@@ -3,8 +3,10 @@ package UI;
 import java.awt.Graphics;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import Engine.GameGlobals;
 import Engine.SoundManager;
 import Engine.SpriteManager;
+import Map.MapManager;
 
 public class LoadScreen {
     private boolean started = false;
@@ -44,6 +46,10 @@ public class LoadScreen {
                 SoundManager.loadAll((i) -> {
                     this.progressBar.setPercentage((p.get() + i) * 100 / total);
                 });
+
+                GameGlobals.map = MapManager.map1;
+                GameGlobals.loaded = true;
+
                 this.ended = true;
             }).start();
         }

@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import Engine.GameGlobals;
 import Engine.SoundManager;
 import Entity.Slime;
-import Map.MapManager;
 
 public class BootScreen {
     private boolean started = false;
@@ -40,14 +39,12 @@ public class BootScreen {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    this.ended = true;
-                    return;
+                    //
                 }
 
+                this.slime.getSprite().stop();
+                this.slime.destroy();
                 this.ended = true;
-
-                GameGlobals.map = MapManager.map1;
-                GameGlobals.loaded = true;
             }).start();
         }
 

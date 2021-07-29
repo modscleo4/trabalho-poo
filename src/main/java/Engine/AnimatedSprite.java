@@ -10,31 +10,32 @@ public class AnimatedSprite extends Sprite {
     private boolean loop;
     private int timing;
     private int index;
+    private boolean preAnimated = true;
     Timer t;
 
     public AnimatedSprite(String spritesPath, boolean loop, int timing, int x, int y, boolean solid) {
         super("", x, y, solid);
         this.spritesPath = spritesPath;
-        this.timing = timing;
+        this.setTiming(timing);
         this.loop = loop;
-        this.index = 0;
+        this.setIndex(0);
 
         this.t = new Timer(this.timing, ae -> {
             if (GameGlobals.paused) {
                 return;
             }
 
-            if (!this.loop && this.index == this.getSprites().length - 1) {
-                this.stop();
-                ((Timer) ae.getSource()).stop();
-                return;
+            if (this.index == this.getSprites().length) {
+                if (this.loop) {
+                    this.reset();
+                } else {
+                    this.stop();
+                    ((Timer) ae.getSource()).stop();
+                    return;
+                }
+            } else {
+                this.setPath(this.getSprites()[this.index++]);
             }
-
-            this.index++;
-
-            this.index %= this.getSprites().length;
-
-            this.setPath(this.getSprites()[this.index]);
         });
     }
 
@@ -52,11 +53,11 @@ public class AnimatedSprite extends Sprite {
     }
 
     public void reset() {
-        this.index = 0;
+        this.setIndex(0);
     }
 
     public void resetIfEnded() {
-        if (this.index == this.getSprites().length - 1) {
+        if (this.index == this.getSprites().length) {
             this.reset();
         }
     }
@@ -85,9 +86,42 @@ public class AnimatedSprite extends Sprite {
         return this.index;
     }
 
+    private void setIndex(int index) {
+        this.index = index;
+        this.setPath(this.getSprites()[this.index]);
+    }
+
+    public int getTiming() {
+        return this.timing;
+    }
+
+    public void setTiming(int timing) {
+        this.timing = timing;
+    }
+
+    public boolean isPreAnimated() {
+        return this.preAnimated;
+    }
+
+    public void setPreAnimated(boolean preAnimated) {
+        this.preAnimated = preAnimated;
+    }
+
+    public boolean isAnimating() {
+        return this.t.isRunning();
+    }
+
     @Override
-    public String getPath() {
-        return this.getSprites()[this.index];
+    public void setUseDirection(boolean useDirection) {
+        super.setUseDirection(useDirection);
+
+        if (useDirection) {
+            this.sprites = SpriteManager.spritesInDirectory(this.spritesPath + "/" + this.getDirection())
+                    .toArray(new String[0]);
+        } else {
+            this.sprites = SpriteManager.spritesInDirectory(this.spritesPath).toArray(new String[0]);
+        }
+        this.reset();
     }
 
     @Override
@@ -96,11 +130,11 @@ public class AnimatedSprite extends Sprite {
 
         this.sprites = SpriteManager.spritesInDirectory(this.spritesPath + "/" + this.getDirection())
                 .toArray(new String[0]);
+        this.reset();
     }
 
     @Override
     public void draw(Graphics g) {
-        this.animate();
         super.draw(g);
     }
 }
