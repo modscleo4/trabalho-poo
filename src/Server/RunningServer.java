@@ -9,7 +9,7 @@ public class RunningServer extends Thread {
      OutputStream output;
      Logic logic;
 
-     int player, enemy,player2;
+     int player,player2;
      Position[] positions = {new Position(0, 0), new Position(0, 0)};
 
      boolean clientRunning[] = {true, true};
@@ -20,7 +20,7 @@ public class RunningServer extends Thread {
           this.logic = logic;
 
           player = output.cont++;
-          enemy = 1 - player;
+          player2 = 1 - player;
      }
 
      @Override
@@ -47,39 +47,11 @@ public class RunningServer extends Thread {
                               logic.movement(player, direction);
 
                               break;
-                         case "hit":
-                              /*positions[player].x = input.readInt();
-                              positions[player].y = input.readInt();
-                              positions[enemy].x = input.readInt();
-                              positions[enemy].y = input.readInt();
 
-                              if (logic.attack(enemy, positions[player], positions[enemy])){
-                                   synchronized (logic) {
-                                        if(logic.getLifes(enemy) == 0)
-                                        {
-                                             sendType("WON");
-                                             sendEnemyType("ENEMY WON");
-
-                                             endGame();
-                                        } else{
-                                             sendType("HIT");
-                                             sendEnemyType("ENEMY HIT");
-                                        }
-
-                                        sendLife();
-                                        sendEnemyLife();
-
-                                        sleep(120);
-                                   }
-                              } else {
-                                   sendType("MISS");
-                                   sendEnemyType("ENEMY MISS");
-                              }
-                              break;*/
-                    }
+                            }
 
                     flushData();
-               } while(clientRunning[player] && clientRunning[enemy]);
+               } while(clientRunning[player] && clientRunning[player2]);
 
                output.output[player].close();
                input.close();
@@ -92,24 +64,19 @@ public class RunningServer extends Thread {
                }
           } catch(NoSuchElementException e) {
                e.printStackTrace();
-          } catch (InterruptedException e) {
-               e.printStackTrace();
           }
      }
 
      public void startServer(){
           try{
                sendInitialPositions();
-               sendEnemyInitialPositions();
+               sendPlayer2InitialPositions();
 
                for (int i = 10; i >= 1; i--) {
-                    send("TIMER");
-                    sendEnemy("TIMER");
+                    send("timer");
+                    sendPlayer2("timer");
                     sleep(1000);
                }
-
-               sendLife();
-               sendEnemyLife();
           } catch (InterruptedException e) {
      }
      }
@@ -117,7 +84,7 @@ public class RunningServer extends Thread {
      private void flushData() {
           try {
                output.output[player].flush();
-               output.output[enemy].flush();
+               output.output[player2].flush();
           } catch(IOException e) {
                e.printStackTrace();
           }
@@ -130,7 +97,7 @@ public class RunningServer extends Thread {
                     output.output[player].writeUTF(i);
                } catch(IOException e) {
                     clientRunning[player] = false;
-                    sendEnemyType("WON");
+                    sendPlayer2Type("WON");
                }
           }
      }
@@ -141,7 +108,7 @@ public class RunningServer extends Thread {
                     output.output[player].writeInt(i);
                } catch (IOException e) {
                     clientRunning[player] = false;
-                    sendEnemyType("WON");
+                    sendPlayer2Type("WON");
                }
           }
      }
@@ -153,7 +120,7 @@ public class RunningServer extends Thread {
 
      private void sendPositions() {
           sendVariationPosition(logic.getPosition(player));
-          sendVariationPosition(logic.getPosition(enemy));
+          sendVariationPosition(logic.getPosition(player2));
      }
 
      private void sendVariationPosition(Position variation){
@@ -168,66 +135,61 @@ public class RunningServer extends Thread {
           send(logic.INITIAL_POSITION_PLAYER2.y);
      }
 
+
      //! PLAYER 2
-     private void sendEnemy(String i) {
-          if (clientRunning[enemy]) {
+     private void sendPlayer2(String i) {
+          if (clientRunning[player2]) {
                try {
-                    output.output[enemy].writeUTF(i);
+                    output.output[player2].writeUTF(i);
                } catch (IOException e) {
-                    clientRunning[enemy] = false;
+                    clientRunning[player2] = false;
                     send("LOST");
                }
           }
      }
 
-     private void sendEnemy(int i) {
-          if (clientRunning[enemy]) {
+     private void sendPlayer2(int i) {
+          if (clientRunning[player2]) {
                try {
-                    output.output[enemy].writeInt(i);
+                    output.output[player2].writeInt(i);
                } catch (IOException e) {
-                    clientRunning[enemy] = false;
+                    clientRunning[player2] = false;
                     send("LOST");
                }
           }
      }
 
-     private void sendEnemyType(String type) {
-          sendEnemy(type);
-          sendEnemyPositions();
+     private void sendPlayer2Type(String type) {
+          sendPlayer2(type);
+          sendPlayer2Positions();
      }
 
-     private void sendEnemyPositions() {
-          sendEnemyVariationPosition(logic.getPosition(enemy));
-          sendEnemyVariationPosition(logic.getPosition(player));
+     private void sendPlayer2Positions() {
+          sendPlayer2VariationPosition(logic.getPosition(player2));
+          sendPlayer2VariationPosition(logic.getPosition(player));
      }
 
-     private void sendEnemyVariationPosition(Position variation) {
-          sendEnemy(variation.x);
-          sendEnemy(variation.y);
+     private void sendPlayer2VariationPosition(Position variation) {
+          sendPlayer2(variation.x);
+          sendPlayer2(variation.y);
      }
 
-     private void sendEnemyInitialPositions() {
-          sendEnemy(logic.INITIAL_POSITION_PLAYER1.x);
-          sendEnemy(logic.INITIAL_POSITION_PLAYER1.y);
-          sendEnemy(logic.INITIAL_POSITION_PLAYER2.x);
-          sendEnemy(logic.INITIAL_POSITION_PLAYER2.y);
+     private void sendPlayer2InitialPositions() {
+          sendPlayer2(logic.INITIAL_POSITION_PLAYER1.x);
+          sendPlayer2(logic.INITIAL_POSITION_PLAYER1.y);
+          sendPlayer2(logic.INITIAL_POSITION_PLAYER2.x);
+          sendPlayer2(logic.INITIAL_POSITION_PLAYER2.y);
      }
 
-     private void sendEnemyLife(){
-          int[] lifes = logic.getLifes();
-
-          sendEnemy(lifes[enemy]);
-          sendEnemy(lifes[player]);
-     }
 
      public void tick(){
           new Thread(){
                public void run() {
-                    while(clientRunning[player] && clientRunning[enemy]){
+                    while(clientRunning[player] && clientRunning[player2]){
                          try{
                               synchronized(logic){
                                    sendType("COORDINATES");
-                                   sendEnemyType("COORDINATES");
+                                   sendPlayer2Type("COORDINATES");
                                    flushData();
 
                                    logic.resetPosition();
@@ -246,7 +208,7 @@ public class RunningServer extends Thread {
                public void run() {
                     try {
                          sleep(3000);
-                         clientRunning[enemy] = false;
+                         clientRunning[player2] = false;
                     } catch (InterruptedException e) {
                     }
                }
