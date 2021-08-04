@@ -26,16 +26,104 @@ import UI.LoadScreen;
 import UI.PauseUI;
 
 public class Main extends JFrame {
+    Network network = new Network(this, "127.0.0.1", 8080);
+    boolean gameRunning = false;
+
     Desenho des = new Desenho();
+
+
+
     public String globMove;
 
+
+
+    Main() {
+        super("Trabalho");
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.getContentPane().setLayout(new GridBagLayout());
+        this.getContentPane().setBackground(Color.BLACK);
+        this.getContentPane().add(des);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                globMove = KeyEvent.getKeyText(e.getKeyCode());
+                if (e.getKeyCode() == KeyEvent.VK_ENTER && e.isAltDown()) {
+                    dispose();
+
+                    if (Settings.fullscreen) {
+                        setExtendedState(JFrame.NORMAL);
+                        setUndecorated(false);
+                        pack();
+                        setLocationRelativeTo(null);
+                    } else {
+                        setExtendedState(JFrame.MAXIMIZED_BOTH);
+                        setUndecorated(true);
+                    }
+
+                    setVisible(true);
+
+                    Settings.fullscreen = !Settings.fullscreen;
+
+                    return;
+                } else if (e.getKeyCode() == Settings.KEY_PAUSE) {
+                    GameGlobals.paused = !GameGlobals.paused;
+                } else if (e.getKeyCode() == KeyEvent.VK_F3) {
+                    Settings.debugInfo = !Settings.debugInfo;
+                }
+
+                for (KeyListener listener : GameGlobals.keyListeners) {
+                    listener.keyPressed(e);
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                for (KeyListener listener : GameGlobals.keyListeners) {
+                    listener.keyReleased(e);
+                }
+            }
+        });
+        new Thread() {
+               Position playerPosition = new Position(0, 0);
+               Position player2Position = new Position(0, 0);
+
+               public void run() {
+                    startNetwork();
+                    gameRunning = true;
+                    String action;
+
+                    while(network.alive()) {
+                         action = network.readTypeMessage();
+                         network.readPosition(playerPosition, player2Position);
+
+                    }
+               }
+          }.start();
+    }
+    private void startNetwork(){
+        Position playerPosition = new Position(0, 0);
+        Position player2Position = new Position(0, 0);
+        network.readPosition(playerPosition, player2Position);
+        for(int i = 10; i >= 1; i--){
+             System.out.println("O jogo começa em: " + i + " segundo(s).");
+             network.readTypeMessage();
+        }
+
+   }
+
     class Desenho extends JPanel {
+
         private BootScreen bootScreen = new BootScreen();
         private PauseUI pauseUI = new PauseUI();
         private EndUI endUI = new EndUI();
         private LoadScreen loadScreen = new LoadScreen();
 
         Desenho() {
+
             this.setMaximumSize(new Dimension(GameGlobals.width, GameGlobals.height));
             this.setPreferredSize(new Dimension(GameGlobals.width, GameGlobals.height));
 
@@ -65,13 +153,21 @@ public class Main extends JFrame {
         }
 
         private void doGameLoop() {
-            if (GameGlobals.loaded) {
+            if (GameGlobals.loaded ) {
+
                 GameGlobals.map.mount();
                 GameGlobals.map.animateAllSprites();
+
+
+
             }
-        }
+      }
+
+
+
 
         private void draw(Graphics g) {
+          if(gameRunning){
             g.setColor(Color.BLACK);
             g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 
@@ -122,13 +218,16 @@ public class Main extends JFrame {
                 GameGlobals.internalClock++;
                 GameGlobals.map.playBG();
             }
+          }
         }
 
         @Override
         public void paintComponent(Graphics g) {
+
             Instant timeStart = Instant.now();
 
             try {
+
                 g.clearRect(0, 0, this.getWidth(), this.getHeight());
 
                 GameGlobals.uiLayer.clear();
@@ -185,65 +284,20 @@ public class Main extends JFrame {
                 }
 
                 this.repaint();
+
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this.getRootPane(), e.getStackTrace(), e.getClass().getName(),
                         JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
             }
-        }
+
+
+
+      }
+
     }
 
-    Main() {
-        super("Trabalho");
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.getContentPane().setLayout(new GridBagLayout());
-        this.getContentPane().setBackground(Color.BLACK);
-        this.getContentPane().add(des);
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setResizable(false);
 
-        this.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                globMove = KeyEvent.getKeyText(e.getKeyCode());
-                if (e.getKeyCode() == KeyEvent.VK_ENTER && e.isAltDown()) {
-                    dispose();
-
-                    if (Settings.fullscreen) {
-                        setExtendedState(JFrame.NORMAL);
-                        setUndecorated(false);
-                        pack();
-                        setLocationRelativeTo(null);
-                    } else {
-                        setExtendedState(JFrame.MAXIMIZED_BOTH);
-                        setUndecorated(true);
-                    }
-
-                    setVisible(true);
-
-                    Settings.fullscreen = !Settings.fullscreen;
-
-                    return;
-                } else if (e.getKeyCode() == Settings.KEY_PAUSE) {
-                    GameGlobals.paused = !GameGlobals.paused;
-                } else if (e.getKeyCode() == KeyEvent.VK_F3) {
-                    Settings.debugInfo = !Settings.debugInfo;
-                }
-
-                for (KeyListener listener : GameGlobals.keyListeners) {
-                    listener.keyPressed(e);
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                for (KeyListener listener : GameGlobals.keyListeners) {
-                    listener.keyReleased(e);
-                }
-            }
-        });
-    }
 
     static public void main(String[] args) {
         Main f = new Main();

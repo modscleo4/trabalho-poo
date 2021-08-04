@@ -1,4 +1,3 @@
-/*
 import java.io.*;
 import java.net.*;
 import javax.swing.*;
@@ -43,7 +42,7 @@ public class Network {
 
      public void sendMovement(String movement) {
           try {
-               output.writeUTF("MOVEMENT");
+               output.writeUTF("move");
                output.writeUTF(movement);
           } catch (IOException e) {
                data = false;
@@ -51,16 +50,18 @@ public class Network {
      }
 
 
-     public void readPosition(Position player, Position enemy) {
+     public void readPosition(Position player, Position player2) {
           try {
                player.x = input.readInt();
                player.y = input.readInt();
-               enemy.x = input.readInt();
-               enemy.y = input.readInt();
+               player2.x = input.readInt();
+               player2.y = input.readInt();
           } catch (IOException e) {
                data = false;
           }
      }
+
+
 
      public void flushOutput(){
           try{
@@ -70,4 +71,3 @@ public class Network {
           }
      }
 }
-*/
