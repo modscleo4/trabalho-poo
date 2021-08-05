@@ -26,8 +26,6 @@ public class MapManager {
             }
         }
 
-        GameGlobals.player = new Omori(1, 1);
-        GameGlobals.player2 = new Aubrey(2, 2);
         Slime slime = new Slime(5, 5, false);
         Rele rele = new Rele(4, 4);
 

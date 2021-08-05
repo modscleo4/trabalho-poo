@@ -31,11 +31,7 @@ public class Main extends JFrame {
 
     Desenho des = new Desenho();
 
-
-
     public String globMove;
-
-
 
     Main() {
         super("Trabalho");
@@ -87,45 +83,47 @@ public class Main extends JFrame {
                 }
             }
         });
+
         new Thread() {
-               Position playerPosition = new Position(0, 0);
-               Position player2Position = new Position(0, 0);
+            Position playerPosition = new Position(0, 0);
+            Position player2Position = new Position(0, 0);
 
-               public void run() {
-                    startNetwork();
-                    gameRunning = true;
-                    String action;
+            public void run() {
+                startNetwork();
+                gameRunning = true;
+                String action;
 
-                    while(network.alive()) {
-                         action = network.readTypeMessage();
-                         network.readPosition(playerPosition, player2Position);
+                while (network.alive()) {
+                    action = network.readTypeMessage();
+                    network.readPosition(playerPosition, player2Position);
 
-                    }
-               }
-          }.start();
+                }
+            }
+        }.start();
     }
-    private void startNetwork(){
+
+    private void startNetwork() {
         Position playerPosition = new Position(0, 0);
         Position player2Position = new Position(0, 0);
         network.readPosition(playerPosition, player2Position);
-        for(int i = 10; i >= 1; i--){
-             System.out.println("O jogo começa em: " + i + " segundo(s).");
-             network.readTypeMessage();
+        for (int i = 10; i >= 1; i--) {
+            System.out.println("O jogo começa em: " + i + " segundo(s).");
+            network.readTypeMessage();
         }
-
-   }
+    }
 
     class Desenho extends JPanel {
-
         private BootScreen bootScreen = new BootScreen();
         private PauseUI pauseUI = new PauseUI();
         private EndUI endUI = new EndUI();
         private LoadScreen loadScreen = new LoadScreen();
 
         Desenho() {
-
             this.setMaximumSize(new Dimension(GameGlobals.width, GameGlobals.height));
             this.setPreferredSize(new Dimension(GameGlobals.width, GameGlobals.height));
+
+            GameGlobals.player = new Omori(1, 1);
+            GameGlobals.player2 = new Aubrey(2, 2);
 
             this.addMouseListener(new MouseAdapter() {
                 @Override
@@ -142,6 +140,7 @@ public class Main extends JFrame {
                     }
                 }
             });
+
             this.addMouseMotionListener(new MouseInputAdapter() {
                 @Override
                 public void mouseMoved(MouseEvent e) {
@@ -153,72 +152,66 @@ public class Main extends JFrame {
         }
 
         private void doGameLoop() {
-            if (GameGlobals.loaded ) {
-
+            if (GameGlobals.loaded) {
                 GameGlobals.map.mount();
                 GameGlobals.map.animateAllSprites();
-
-
-
             }
-      }
-
-
-
+        }
 
         private void draw(Graphics g) {
-          if(gameRunning){
-            g.setColor(Color.BLACK);
-            g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+            if (gameRunning) {
+                g.setColor(Color.BLACK);
+                g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 
-            if (!this.loadScreen.isEnded()) {
-                this.loadScreen.draw(g);
-                return;
-            }
+                if (!this.loadScreen.isEnded()) {
+                    this.loadScreen.draw(g);
+                    return;
+                }
 
-            if (!this.bootScreen.isEnded()) {
-                this.bootScreen.draw(g);
-                return;
-            }
+                if (!this.bootScreen.isEnded()) {
+                    this.bootScreen.draw(g);
+                    return;
+                }
 
-            for (int z = 0; z < GameGlobals.maxZ; z++) {
-                for (int i = 0; i < GameGlobals.map.getMap().length; i++) {
-                    for (int j = 0; j < GameGlobals.map.getMap()[i].length; j++) {
-                        if (z >= GameGlobals.map.getMap()[i][j].length || GameGlobals.map.getMap()[i][j][z] == null) {
-                            continue;
+                for (int z = 0; z < GameGlobals.maxZ; z++) {
+                    for (int i = 0; i < GameGlobals.map.getMap().length; i++) {
+                        for (int j = 0; j < GameGlobals.map.getMap()[i].length; j++) {
+                            if (z >= GameGlobals.map.getMap()[i][j].length
+                                    || GameGlobals.map.getMap()[i][j][z] == null) {
+                                continue;
+                            }
+
+                            GameGlobals.map.getMap()[i][j][z].draw(g);
                         }
-
-                        GameGlobals.map.getMap()[i][j][z].draw(g);
                     }
                 }
+
+                GameGlobals.uiLayer.draw(g);
+
+                if (GameGlobals.result.equals("won")) {
+                    g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
+                    g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
+
+                    endUI.draw(g);
+                } else if (GameGlobals.result.equals("lost")) {
+                    g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
+                    g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
+
+                    endUI.draw(g);
+                }
+
+                if (GameGlobals.paused) {
+                    g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
+                    g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
+
+                    pauseUI.draw(g);
+                    GameGlobals.map.pauseBG();
+                    //
+                } else {
+                    GameGlobals.internalClock++;
+                    GameGlobals.map.playBG();
+                }
             }
-
-            GameGlobals.uiLayer.draw(g);
-
-            if (GameGlobals.result.equals("won")) {
-                g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
-                g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
-
-                endUI.draw(g);
-            } else if (GameGlobals.result.equals("lost")) {
-                g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
-                g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
-
-                endUI.draw(g);
-            }
-
-            if (GameGlobals.paused) {
-                g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
-                g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
-
-                pauseUI.draw(g);
-                GameGlobals.map.pauseBG();
-                //
-            } else {
-                GameGlobals.internalClock++;
-                GameGlobals.map.playBG();
-            }
-          }
         }
 
         @Override
@@ -291,13 +284,9 @@ public class Main extends JFrame {
                 System.exit(1);
             }
 
-
-
-      }
+        }
 
     }
-
-
 
     static public void main(String[] args) {
         Main f = new Main();
