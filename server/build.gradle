@@ -1,5 +1,9 @@
 plugins {
-    id 'java'
+    id 'application'
+}
+
+application {
+    mainClass = 'Server'
 }
 
 version '1.0'
@@ -9,12 +13,6 @@ sourceCompatibility = 11
 
 repositories {
     mavenCentral()
-}
-
-jar {
-    manifest {
-        from "MANIFEST.MF"
-    }
 }
 
 dependencies {

@@ -11,7 +11,7 @@ import Engine.AnimatedSprite;
 import Engine.BaseObject;
 import Engine.GameGlobals;
 
-public abstract class Entity extends BaseObject implements KeyListener, MouseInputListener {
+public abstract class Entity extends BaseObject implements KeyListener, MouseInputListener, AutoCloseable {
     private AnimatedSprite[] sprites;
     private int currentSprite;
     protected boolean interactibleWhenPaused = false;
@@ -322,9 +322,7 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
     }
 
     @Override
-    protected void finalize() throws Throwable {
+    public void close() {
         this.destroy();
-
-        super.finalize();
     }
 }

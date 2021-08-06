@@ -12,7 +12,10 @@ import UI.UILayer;
 
 public final class GameGlobals {
     public static boolean loaded = false;
+    public static boolean netLoaded = false;
     public static boolean paused = false;
+
+    public static Network network;
 
     public static final int MAX_FPS = 60;
     public static final double TARGET_FRAMETIME = 1000F / MAX_FPS;

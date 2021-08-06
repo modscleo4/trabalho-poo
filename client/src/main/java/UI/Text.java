@@ -27,13 +27,8 @@ public class Text extends Entity {
     }
 
     @Override
-    public int getScreenX() {
-        return this.getX();
-    }
-
-    @Override
     public int getScreenY() {
-        return this.getY() - this.getHeight() / 2;
+        return super.getScreenY() - this.getHeight() / 2;
     }
 
     @Override
@@ -85,6 +80,6 @@ public class Text extends Entity {
         super.draw(g);
         g.setFont(this.getFont());
         g.setColor(this.getColor());
-        g.drawString(this.getText(), this.getX(), this.getY());
+        g.drawString(this.getText(), this.getScreenX(), this.getScreenY() + this.getHeight() / 2);
     }
 }

@@ -6,8 +6,6 @@ import java.util.List;
 import Engine.BaseObject;
 import Engine.GameGlobals;
 import Engine.Sprite;
-import Entity.Aubrey;
-import Entity.Omori;
 import Entity.Rele;
 import Entity.Slime;
 

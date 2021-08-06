@@ -45,14 +45,54 @@ public abstract class Player extends GameEntity {
         }
 
         if (e.getKeyCode() == Settings.KEY_MOVE_UP) {
+            // Debounce
+            if (this.moveThread != null || this.attackThread != null) {
+                return;
+            }
+
+            // manda network
+            GameGlobals.network.sendCommand("MOVE", new String[] { "0", "-1" });
+
             this.move(0, -1);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_DOWN) {
-            this.move(0, +1);
+            // Debounce
+            if (this.moveThread != null || this.attackThread != null) {
+                return;
+            }
+
+            // manda network
+            GameGlobals.network.sendCommand("MOVE", new String[] { "0", "1" });
+
+            this.move(0, 1);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_LEFT) {
+            // Debounce
+            if (this.moveThread != null || this.attackThread != null) {
+                return;
+            }
+
+            // manda network
+            GameGlobals.network.sendCommand("MOVE", new String[] { "-1", "0" });
+
             this.move(-1, 0);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_RIGHT) {
-            this.move(+1, 0);
+            // Debounce
+            if (this.moveThread != null || this.attackThread != null) {
+                return;
+            }
+
+            // manda network
+            GameGlobals.network.sendCommand("MOVE", new String[] { "1", "0" });
+
+            this.move(1, 0);
         } else if (e.getKeyCode() == Settings.KEY_ATTACK) {
+            // Debounce
+            if (this.moveThread != null || this.attackThread != null) {
+                return;
+            }
+
+            // manda network
+            GameGlobals.network.sendCommand("ATTACK");
+
             this.attack();
         }
     }
@@ -109,6 +149,7 @@ public abstract class Player extends GameEntity {
     }
 
     public void move(int dx, int dy) {
+        // Debounce
         if (this.moveThread != null || this.attackThread != null) {
             return;
         }

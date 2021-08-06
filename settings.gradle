@@ -1,1 +1,3 @@
 rootProject.name = 'Jogo'
+include 'client'
+include 'server'

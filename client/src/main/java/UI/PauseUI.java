@@ -13,6 +13,7 @@ public class PauseUI {
 
     public PauseUI() {
         this.btnReturn = new Button("Return", 48, GameGlobals.height - 48 - 80);
+        this.btnReturn.setAbsoluteCoords(true);
         this.btnReturn.setHandler(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -21,6 +22,7 @@ public class PauseUI {
         });
 
         this.btnSettings = new Button("Settings", 48, GameGlobals.height - 48 - 40);
+        this.btnSettings.setAbsoluteCoords(true);
         this.btnSettings.setHandler(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -29,6 +31,7 @@ public class PauseUI {
         });
 
         this.btnExit = new Button("Exit", 48, GameGlobals.height - 48);
+        this.btnExit.setAbsoluteCoords(true);
         this.btnExit.setHandler(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
