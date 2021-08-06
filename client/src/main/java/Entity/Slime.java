@@ -36,9 +36,10 @@ public class Slime extends Enemy {
 
         if (!disableTimer) {
             this.internalTimer = new Timer(500, ae -> {
-                if (GameGlobals.paused) {
+                // não tem pause em jogo online
+                /*if (GameGlobals.paused) {
                     return;
-                }
+                }*/
 
                 if (GameGlobals.internalClock == 0) {
                     return;
@@ -90,7 +91,6 @@ public class Slime extends Enemy {
                 return;
             }
 
-            this.damageThread.interrupt();
             this.damageThread = null;
             this.takenDamage = 0;
         });

@@ -21,9 +21,10 @@ public class AnimatedSprite extends Sprite {
         this.setIndex(0);
 
         this.t = new Timer(this.timing, ae -> {
-            if (GameGlobals.paused) {
+            // não tem pause em jogo online
+            /*if (GameGlobals.paused) {
                 return;
-            }
+            }*/
 
             if (this.index == this.getSprites().length) {
                 if (this.loop) {

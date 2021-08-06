@@ -8,8 +8,8 @@ public class Logica implements ILogica {
     }
 
     public void executa() {
-        this.jogo.sendCommand(0, "READY");
-        this.jogo.sendCommand(1, "READY");
+        this.jogo.sendCommand(0, "READY", new String[] { "P1" });
+        this.jogo.sendCommand(1, "READY", new String[] { "P2" });
 
         new Thread(() -> {
             while (jogo.clienteVivo[0] && jogo.clienteVivo[1]) {
@@ -18,4 +18,7 @@ public class Logica implements ILogica {
         }).start();
     }
 
+    public int getDamage() {
+        return (int) Math.ceil(5 + Math.random() * (10 - 5));
+    }
 }

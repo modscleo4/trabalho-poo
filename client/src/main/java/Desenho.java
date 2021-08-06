@@ -15,8 +15,6 @@ import javax.swing.event.MouseInputListener;
 
 import Engine.GameGlobals;
 import Engine.Settings;
-import Entity.Aubrey;
-import Entity.Omori;
 import UI.BootScreen;
 import UI.EndUI;
 import UI.LoadScreen;
@@ -33,9 +31,6 @@ public class Desenho extends JPanel {
     Desenho() {
         this.setMaximumSize(new Dimension(GameGlobals.width, GameGlobals.height));
         this.setPreferredSize(new Dimension(GameGlobals.width, GameGlobals.height));
-
-        GameGlobals.player = new Omori(1, 1);
-        GameGlobals.player2 = new Aubrey(2, 2);
 
         this.addMouseListener(new MouseAdapter() {
             @Override
@@ -122,8 +117,6 @@ public class Desenho extends JPanel {
 
             GameGlobals.uiLayer.clear();
 
-            this.doGameLoop();
-
             if (!this.loadScreen.isEnded()) {
                 this.loadScreen.draw(g);
             } else if (!this.bootScreen.isEnded()) {
@@ -131,6 +124,8 @@ public class Desenho extends JPanel {
             } else if (!this.netLoadScreen.isEnded()) {
                 this.netLoadScreen.draw(g);
             } else {
+                this.doGameLoop();
+
                 this.draw(g);
             }
 

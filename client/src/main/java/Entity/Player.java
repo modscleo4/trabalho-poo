@@ -53,7 +53,7 @@ public abstract class Player extends GameEntity {
             // manda network
             GameGlobals.network.sendCommand("MOVE", new String[] { "0", "-1" });
 
-            this.move(0, -1);
+            //this.move(0, -1);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_DOWN) {
             // Debounce
             if (this.moveThread != null || this.attackThread != null) {
@@ -63,7 +63,7 @@ public abstract class Player extends GameEntity {
             // manda network
             GameGlobals.network.sendCommand("MOVE", new String[] { "0", "1" });
 
-            this.move(0, 1);
+            //this.move(0, 1);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_LEFT) {
             // Debounce
             if (this.moveThread != null || this.attackThread != null) {
@@ -73,7 +73,7 @@ public abstract class Player extends GameEntity {
             // manda network
             GameGlobals.network.sendCommand("MOVE", new String[] { "-1", "0" });
 
-            this.move(-1, 0);
+            //this.move(-1, 0);
         } else if (e.getKeyCode() == Settings.KEY_MOVE_RIGHT) {
             // Debounce
             if (this.moveThread != null || this.attackThread != null) {
@@ -83,7 +83,7 @@ public abstract class Player extends GameEntity {
             // manda network
             GameGlobals.network.sendCommand("MOVE", new String[] { "1", "0" });
 
-            this.move(1, 0);
+            //this.move(1, 0);
         } else if (e.getKeyCode() == Settings.KEY_ATTACK) {
             // Debounce
             if (this.moveThread != null || this.attackThread != null) {
@@ -93,7 +93,7 @@ public abstract class Player extends GameEntity {
             // manda network
             GameGlobals.network.sendCommand("ATTACK");
 
-            this.attack();
+            //this.attack();
         }
     }
 
@@ -129,7 +129,6 @@ public abstract class Player extends GameEntity {
             }
 
             this.takenDamage = 0;
-            this.damageThread.interrupt();
             this.damageThread = null;
         });
         this.damageThread.start();
@@ -151,16 +150,10 @@ public abstract class Player extends GameEntity {
     }
 
     public void move(int dx, int dy) {
-        // Debounce
-        if (this.moveThread != null || this.attackThread != null) {
-            return;
-        }
-
         this.moveThread = new Thread(() -> {
             super.move(MOVE, dx, dy, () -> {
                 this.resetAnimation(IDLE);
 
-                this.moveThread.interrupt();
                 this.moveThread = null;
             });
         });
@@ -168,11 +161,7 @@ public abstract class Player extends GameEntity {
         this.moveThread.start();
     }
 
-    public void attack() {
-        if (this.moveThread != null || this.attackThread != null) {
-            return;
-        }
-
+    public void attack(int damage) {
         int x = this.getX();
         int y = this.getY();
 
@@ -192,7 +181,7 @@ public abstract class Player extends GameEntity {
             return;
         }
 
-        GameGlobals.map.enemyAt(x, y).hit(this.getDamage());
+        GameGlobals.map.enemyAt(x, y).hit(damage);
 
         this.attackThread = new Thread(() -> {
             this.setCurrentSprite(ATTACK);
@@ -209,6 +198,10 @@ public abstract class Player extends GameEntity {
         });
 
         this.attackThread.start();
+    }
+
+    public void attack() {
+        this.attack(this.getDamage());
     }
 
     public String getName() {

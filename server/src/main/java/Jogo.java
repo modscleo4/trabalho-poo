@@ -30,6 +30,7 @@ public class Jogo implements IJogo {
         int numAdversario = 1 - numDoJogador;
         new Thread() {
             // vai existir uma thread para cada cliente
+            @Override
             public void run() {
                 try {
                     DataInputStream is = new DataInputStream(clientSocket.getInputStream());
@@ -42,9 +43,14 @@ public class Jogo implements IJogo {
 
                         switch (command) {
                             case "MOVE":
+                                sendCommand(numJogador, "MOVE", new String[] { "P1", args[0], args[1] });
+                                sendCommand(numAdversario, "MOVE", new String[] { "P2", args[0], args[1] });
 
                                 break;
                             case "ATTACK":
+                                int damage = logica.getDamage();
+                                sendCommand(numJogador, "ATTACK", new String[] { "P1", "" + damage });
+                                sendCommand(numAdversario, "ATTACK", new String[] { "P2", "" + damage });
 
                                 break;
                         }

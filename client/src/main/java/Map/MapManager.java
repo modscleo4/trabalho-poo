@@ -10,9 +10,13 @@ import Entity.Rele;
 import Entity.Slime;
 
 public class MapManager {
-    public static final Map map1;
+    public static Map map1;
 
-    static {
+    public static Map getMap1() {
+        if (map1 != null) {
+            return map1;
+        }
+
         List<BaseObject>[] layers = new ArrayList[GameGlobals.maxZ];
         for (int z = 0; z < layers.length; z++) {
             layers[z] = new ArrayList<>();
@@ -33,5 +37,7 @@ public class MapManager {
         layers[1].add(slime);
 
         map1 = new Map(layers, GameGlobals.maxW, GameGlobals.maxH, "bg1");
+
+        return map1;
     }
 }

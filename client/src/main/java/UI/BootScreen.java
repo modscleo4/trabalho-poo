@@ -54,7 +54,6 @@ public class BootScreen {
                 this.slime.destroy();
                 GameGlobals.network = new Network("127.0.0.1", 8080);
                 this.ended = true;
-                this.t.interrupt();
             });
 
             this.t.start();

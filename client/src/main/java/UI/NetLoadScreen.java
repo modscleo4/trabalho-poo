@@ -3,6 +3,7 @@ package UI;
 import java.awt.Graphics;
 
 import Engine.GameGlobals;
+import Map.MapManager;
 
 public class NetLoadScreen {
     private boolean started = false;
@@ -33,13 +34,17 @@ public class NetLoadScreen {
         if (!this.started) {
             this.t = new Thread(() -> {
                 while (!GameGlobals.network.isReady()) {
-                    System.out.println("Aguardando...");
+                    try {
+                        Thread.sleep(5);
+                    } catch (InterruptedException e) {
+
+                    }
                 }
 
                 GameGlobals.netLoaded = true;
+                GameGlobals.map = MapManager.getMap1();
 
                 this.ended = true;
-                this.t.interrupt();
             });
 
             this.t.start();

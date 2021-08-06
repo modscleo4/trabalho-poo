@@ -23,7 +23,6 @@ public class Rele extends GameEntity {
             super.move(MOVE, dx, dy, () -> {
                 this.resetAnimation(IDLE);
 
-                this.moveThread.interrupt();
                 this.moveThread = null;
             });
         });

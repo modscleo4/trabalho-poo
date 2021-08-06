@@ -35,9 +35,10 @@ public abstract class GameEntity extends Entity {
                 }
             }
 
-            while (GameGlobals.paused) {
+            // não tem pause em jogo online
+            /*while (GameGlobals.paused) {
                 //
-            }
+            }*/
 
             this.setCurrentSprite(index);
         });
@@ -156,9 +157,10 @@ public abstract class GameEntity extends Entity {
 
         this.setAbsoluteCoords(true);
         Timer t = new Timer(delay, (ae) -> {
-            if (GameGlobals.paused) {
+            // não tem pause em jogo online
+            /*if (GameGlobals.paused) {
                 return;
-            }
+            }*/
 
             if (this.getScreenX() == targetScreenX && this.getScreenY() == targetScreenY) {
                 this.setAbsoluteCoords(false);
