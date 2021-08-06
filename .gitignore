@@ -65,3 +65,7 @@ Thumbs.db
 nbproject/*
 # Visual Studio Code
 .vscode
+# VSCode Java
+.classpath
+.project
+.settings/

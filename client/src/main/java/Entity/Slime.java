@@ -90,6 +90,8 @@ public class Slime extends Enemy {
                 return;
             }
 
+            this.damageThread.interrupt();
+            this.damageThread = null;
             this.takenDamage = 0;
         });
         this.damageThread.start();

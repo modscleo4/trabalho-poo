@@ -12,6 +12,7 @@ public class BootScreen {
     private boolean ended = false;
     private Slime slime;
     private Text txt;
+    private Thread t;
 
     public BootScreen() {
         this.slime = new Slime((GameGlobals.width - GameGlobals.SPRITE_WIDTH) / 2,
@@ -42,7 +43,7 @@ public class BootScreen {
             SoundManager.playSound("start");
             this.slime.jump();
 
-            new Thread(() -> {
+            this.t = new Thread(() -> {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -53,7 +54,10 @@ public class BootScreen {
                 this.slime.destroy();
                 GameGlobals.network = new Network("127.0.0.1", 8080);
                 this.ended = true;
-            }).start();
+                this.t.interrupt();
+            });
+
+            this.t.start();
         }
 
         this.started = true;

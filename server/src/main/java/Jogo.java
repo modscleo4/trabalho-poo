@@ -48,7 +48,6 @@ public class Jogo implements IJogo {
 
                                 break;
                         }
-                        descarregaEnvio();
                     } while (clienteVivo[numJogador] && clienteVivo[numAdversario]);
 
                     os[numJogador].close();

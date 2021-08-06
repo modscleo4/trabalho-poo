@@ -129,6 +129,8 @@ public abstract class Player extends GameEntity {
             }
 
             this.takenDamage = 0;
+            this.damageThread.interrupt();
+            this.damageThread = null;
         });
         this.damageThread.start();
 
@@ -158,6 +160,7 @@ public abstract class Player extends GameEntity {
             super.move(MOVE, dx, dy, () -> {
                 this.resetAnimation(IDLE);
 
+                this.moveThread.interrupt();
                 this.moveThread = null;
             });
         });
@@ -201,6 +204,7 @@ public abstract class Player extends GameEntity {
             }
 
             this.resetAnimation(IDLE);
+            this.attackThread.interrupt();
             this.attackThread = null;
         });
 
