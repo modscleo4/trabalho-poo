@@ -21,6 +21,7 @@ public class Logic {
     }
 
     public void movement(int player, String direction) {
+        System.out.println(player + " " + direction);
         int dx = 0;
         int dy = 0;
 

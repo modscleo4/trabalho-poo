@@ -25,6 +25,9 @@ import UI.EndUI;
 import UI.LoadScreen;
 import UI.PauseUI;
 
+import Entity.Aubrey;
+import Entity.Omori;
+
 public class Main extends JFrame {
     Network network = new Network(this, "127.0.0.1", 8080);
     boolean gameRunning = false;
@@ -63,18 +66,22 @@ public class Main extends JFrame {
                     setVisible(true);
 
                     Settings.fullscreen = !Settings.fullscreen;
-
+                    
                     return;
                 } else if (e.getKeyCode() == Settings.KEY_PAUSE) {
                     GameGlobals.paused = !GameGlobals.paused;
                 } else if (e.getKeyCode() == KeyEvent.VK_F3) {
                     Settings.debugInfo = !Settings.debugInfo;
+                }else if(e.getKeyCode()== Settings.KEY_MOVE_UP || e.getKeyCode()== Settings.KEY_MOVE_RIGHT || e.getKeyCode()== Settings.KEY_MOVE_LEFT || e.getKeyCode()== Settings.KEY_MOVE_DOWN ){
+                    network.sendMovement(GameGlobals.player.getDirection());
                 }
 
                 for (KeyListener listener : GameGlobals.keyListeners) {
+                    
                     listener.keyPressed(e);
                 }
             }
+            
 
             @Override
             public void keyReleased(KeyEvent e) {
@@ -85,8 +92,8 @@ public class Main extends JFrame {
         });
 
         new Thread() {
-            Position playerPosition = new Position(0, 0);
-            Position player2Position = new Position(0, 0);
+            Position playerPosition = new Position(1, 1);
+            Position player2Position = new Position(2, 2);
 
             public void run() {
                 startNetwork();
@@ -95,7 +102,19 @@ public class Main extends JFrame {
 
                 while (network.alive()) {
                     action = network.readTypeMessage();
-                    network.readPosition(playerPosition, player2Position);
+                    System.out.println(action);
+                    network.readPosition(playerPosition,player2Position);
+                    int i=0;
+                    switch(action){
+                        case "COORDINATES":
+                            GameGlobals.player.move(playerPosition.x, playerPosition.y);
+                            GameGlobals.player2.move(player2Position.x,player2Position.y);
+                            System.out.println(playerPosition.x + "  " +playerPosition.y);
+                            System.out.println(player2Position.x + "  " +player2Position.y);
+
+                        break;
+                    }
+                    
 
                 }
             }
@@ -103,10 +122,10 @@ public class Main extends JFrame {
     }
 
     private void startNetwork() {
-        Position playerPosition = new Position(0, 0);
-        Position player2Position = new Position(0, 0);
+        Position playerPosition = new Position(1, 1);
+        Position player2Position = new Position(2, 2);
         network.readPosition(playerPosition, player2Position);
-        for (int i = 10; i >= 1; i--) {
+        for (int i = 3; i >= 1; i--) {
             System.out.println("O jogo começa em: " + i + " segundo(s).");
             network.readTypeMessage();
         }

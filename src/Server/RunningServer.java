@@ -10,7 +10,7 @@ public class RunningServer extends Thread {
      Logic logic;
 
      int player,player2;
-     Position[] positions = {new Position(0, 0), new Position(0, 0)};
+     Position[] positions = {new Position(1, 1), new Position(2, 2)};
 
      boolean clientRunning[] = {true, true};
 
@@ -43,7 +43,7 @@ public class RunningServer extends Thread {
                     switch(type) {
                          case "move":
                               direction = input.readUTF();
-
+                              System.out.println(direction);
                               logic.movement(player, direction);
 
                               break;
@@ -72,7 +72,7 @@ public class RunningServer extends Thread {
                sendInitialPositions();
                sendPlayer2InitialPositions();
 
-               for (int i = 10; i >= 1; i--) {
+               for (int i = 3; i >= 1; i--) {
                     send("timer");
                     sendPlayer2("timer");
                     sleep(1000);
