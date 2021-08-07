@@ -3,7 +3,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 
 public class Jogo implements IJogo {
     Socket clientSocket;
@@ -36,22 +35,18 @@ public class Jogo implements IJogo {
                     DataInputStream is = new DataInputStream(clientSocket.getInputStream());
 
                     do {
-                        Player p = null;
-
-                        if (logica != null && logica.players != null && numJogador < logica.players.size()) {
-                            p = logica.players.get(numJogador);
-                        }
-
                         String[] out = is.readUTF().split(" ");
 
                         String command = out[0];
                         String[] args = Arrays.copyOfRange(out, 1, out.length);
 
+                        Player p = logica.players.get(numJogador);
+
                         switch (command) {
                             case "MOVE":
                                 if (!logica.movePlayer(numJogador, Integer.parseInt(args[0]),
                                         Integer.parseInt(args[1]))) {
-                                    return;
+                                    continue;
                                 }
 
                                 sendCommand(numJogador, "MOVE", new String[] { "P1", args[0], args[1] });
@@ -75,7 +70,7 @@ public class Jogo implements IJogo {
                                 int damage = logica.getDamage();
 
                                 if (!logica.hitEnemy(x, y, damage)) {
-                                    return;
+                                    continue;
                                 }
 
                                 sendCommand(numJogador, "ATTACK", new String[] { "P1", "" + damage });
@@ -94,7 +89,6 @@ public class Jogo implements IJogo {
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-                } catch (NoSuchElementException e) {
                 }
             }
         }.start();
@@ -124,17 +118,19 @@ public class Jogo implements IJogo {
     }
 
     void sendCommand(int player, String command, String[] args) {
-        try {
-            if (args == null) {
-                os[player].writeUTF(command);
-            } else {
-                os[player].writeUTF(command + " " + String.join(" ", args));
-            }
+        new Thread(() -> {
+            try {
+                if (args == null) {
+                    os[player].writeUTF(command);
+                } else {
+                    os[player].writeUTF(command + " " + String.join(" ", args));
+                }
 
-            os[player].flush();
-        } catch (IOException e) {
-            //
-        }
+                os[player].flush();
+            } catch (IOException e) {
+                //
+            }
+        }).start();
     }
 
     void sendCommand(int player, String command) {

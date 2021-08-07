@@ -58,17 +58,19 @@ public class Network {
     * @param args Argumentos do comando
     */
     public void sendCommand(String command, String[] args) {
-        try {
-            if (args == null) {
-                output.writeUTF(command);
-            } else {
-                output.writeUTF(command + " " + String.join(" ", args));
-            }
+        new Thread(() -> {
+            try {
+                if (args == null) {
+                    output.writeUTF(command);
+                } else {
+                    output.writeUTF(command + " " + String.join(" ", args));
+                }
 
-            output.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                output.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void sendCommand(String command) {

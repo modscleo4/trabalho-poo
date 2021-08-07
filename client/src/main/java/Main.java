@@ -3,6 +3,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 
@@ -106,15 +107,27 @@ public class Main extends JFrame {
                     Settings.debugInfo = !Settings.debugInfo;
                 }
 
-                for (KeyListener listener : GameGlobals.keyListeners) {
-                    listener.keyPressed(e);
+                Iterator<KeyListener> l = GameGlobals.keyListeners.iterator();
+                while (l.hasNext()) {
+                    try {
+                        KeyListener listener = l.next();
+                        listener.keyPressed(e);
+                    } catch (Throwable ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                for (KeyListener listener : GameGlobals.keyListeners) {
-                    listener.keyReleased(e);
+                Iterator<KeyListener> l = GameGlobals.keyListeners.iterator();
+                while (l.hasNext()) {
+                    try {
+                        KeyListener listener = l.next();
+                        listener.keyReleased(e);
+                    } catch (Throwable ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });

@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import Engine.AnimatedSprite;
@@ -12,6 +14,7 @@ import Engine.GameGlobals;
 import Engine.Settings;
 import Engine.SoundManager;
 import Engine.Sprite;
+import Util.Pair;
 
 public abstract class Player extends GameEntity {
     public static final int IDLE = 0;
@@ -20,13 +23,16 @@ public abstract class Player extends GameEntity {
     public static final int ATTACK = 3;
 
     private String name;
-    private int life = 20;
+    private int life = 200;
     private int minDamage = 5;
     private int maxDamage = 10;
     private int takenDamage = 0;
     private Thread damageThread = null;
     private Thread attackThread = null;
     private Thread moveThread = null;
+
+    private Queue<Pair<Integer, Integer>> moveQueue = new LinkedList<>();
+    private Queue<Integer> attackQueue = new LinkedList<>();
 
     public Player(int x, int y, String name) {
         super(new AnimatedSprite[] { new AnimatedSprite(String.format("%s/idle", name), true, 100, x, y, true),
@@ -155,75 +161,73 @@ public abstract class Player extends GameEntity {
     }
 
     public void move(int dx, int dy) {
-        new Thread(() -> {
-            while (this.moveThread != null) {
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
+        if (this.moveThread != null) {
+            moveQueue.add(new Pair<Integer, Integer>(dx, dy));
+            return;
+        }
 
+        this.moveThread = new Thread(() -> {
+            super.move(MOVE, dx, dy, () -> {
+                this.resetAnimation(IDLE);
+
+                this.moveThread = null;
+
+                Pair<Integer, Integer> p = moveQueue.poll();
+                if (p != null) {
+                    this.move(p.getFirst(), p.getSecond());
                 }
-            }
-
-            this.moveThread = new Thread(() -> {
-                super.move(MOVE, dx, dy, () -> {
-                    this.resetAnimation(IDLE);
-
-                    this.moveThread = null;
-                });
             });
+        });
 
-            this.moveThread.start();
-        }).start();
+        this.moveThread.start();
     }
 
     public void attack(int damage) {
-        new Thread(() -> {
-            while (this.attackThread != null) {
-                try {
-                    Thread.sleep(5);
-                } catch (InterruptedException e) {
+        if (this.attackThread != null) {
+            attackQueue.add(damage);
+            return;
+        }
 
-                }
+        int x = this.getX();
+        int y = this.getY();
+
+        if (this.useDirection) {
+            if (this.getDirection().equals("up")) {
+                y--;
+            } else if (this.getDirection().equals("down")) {
+                y++;
+            } else if (this.getDirection().equals("left")) {
+                x--;
+            } else if (this.getDirection().equals("right")) {
+                x++;
+            }
+        }
+
+        if (GameGlobals.map.enemyAt(x, y) == null) {
+            return;
+        }
+
+        GameGlobals.map.enemyAt(x, y).hit(damage);
+
+        this.attackThread = new Thread(() -> {
+            this.setCurrentSprite(ATTACK);
+
+            try {
+                Thread.sleep(this.getSprite().getTiming() * (this.getSprite().length() - this.getSprite().getIndex()));
+            } catch (InterruptedException e) {
+                //
             }
 
-            int x = this.getX();
-            int y = this.getY();
+            this.resetAnimation(IDLE);
+            this.attackThread = null;
 
-            if (this.useDirection) {
-                if (this.getDirection().equals("up")) {
-                    y--;
-                } else if (this.getDirection().equals("down")) {
-                    y++;
-                } else if (this.getDirection().equals("left")) {
-                    x--;
-                } else if (this.getDirection().equals("right")) {
-                    x++;
-                }
+            Integer dmg = attackQueue.poll();
+            if (dmg != null) {
+                this.attack(dmg.intValue());
             }
+        });
 
-            if (GameGlobals.map.enemyAt(x, y) == null) {
-                return;
-            }
-
-            GameGlobals.map.enemyAt(x, y).hit(damage);
-
-            this.attackThread = new Thread(() -> {
-                this.setCurrentSprite(ATTACK);
-
-                try {
-                    Thread.sleep(
-                            this.getSprite().getTiming() * (this.getSprite().length() - this.getSprite().getIndex()));
-                } catch (InterruptedException e) {
-                    //
-                }
-
-                this.resetAnimation(IDLE);
-                this.attackThread.interrupt();
-                this.attackThread = null;
-            });
-
-            this.attackThread.start();
-        }).start();
+        this.attackThread.start();
     }
 
     public void attack() {
@@ -282,7 +286,7 @@ public abstract class Player extends GameEntity {
             g.fillRect(32, 8, 8 * 20, 16);
 
             g.setColor(Color.RED);
-            g.fillRect(32, 8, 8 * this.getLife(), 16);
+            g.fillRect(32, 8, 8 * this.getLife() / 10, 16);
         } else {
             Sprite heart = new Sprite("aubrey/icon/0", 788, 4, false);
             heart.setAbsoluteCoords(true);
@@ -293,7 +297,7 @@ public abstract class Player extends GameEntity {
             g.fillRect(624, 8, 8 * 20, 16);
 
             g.setColor(Color.BLUE);
-            g.fillRect(624, 8, 8 * this.getLife(), 16);
+            g.fillRect(624, 8, 8 * this.getLife() / 10, 16);
         }
     }
 }

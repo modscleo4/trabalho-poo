@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -35,15 +36,27 @@ public class Desenho extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                for (MouseInputListener listener : GameGlobals.mouseInputListeners) {
-                    listener.mousePressed(e);
+                Iterator<MouseInputListener> l = GameGlobals.mouseInputListeners.iterator();
+                while (l.hasNext()) {
+                    try {
+                        MouseInputListener listener = l.next();
+                        listener.mousePressed(e);
+                    } catch (Throwable ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                for (MouseInputListener listener : GameGlobals.mouseInputListeners) {
-                    listener.mouseReleased(e);
+                Iterator<MouseInputListener> l = GameGlobals.mouseInputListeners.iterator();
+                while (l.hasNext()) {
+                    try {
+                        MouseInputListener listener = l.next();
+                        listener.mouseReleased(e);
+                    } catch (Throwable ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
@@ -51,8 +64,14 @@ public class Desenho extends JPanel {
         this.addMouseMotionListener(new MouseInputAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                for (MouseInputListener listener : GameGlobals.mouseInputListeners) {
-                    listener.mouseMoved(e);
+                Iterator<MouseInputListener> l = GameGlobals.mouseInputListeners.iterator();
+                while (l.hasNext()) {
+                    try {
+                        MouseInputListener listener = l.next();
+                        listener.mouseMoved(e);
+                    } catch (Throwable ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });

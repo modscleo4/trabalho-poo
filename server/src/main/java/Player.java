@@ -1,7 +1,7 @@
 public class Player {
     public int x;
     public int y;
-    public int life = 20;
+    public int life = 200;
     public String direction = "down";
 
     public Player(int x, int y) {
