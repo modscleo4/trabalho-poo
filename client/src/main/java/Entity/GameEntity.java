@@ -152,8 +152,14 @@ public abstract class GameEntity extends Entity {
         this.setScreenX(screenX);
         this.setScreenY(screenY);
 
-        int delay = (this.getSprite().length() * this.getSprite().getTiming())
-                / (int) (Math.sqrt(Math.pow(targetScreenX - screenX, 2) + Math.pow(targetScreenY - screenY, 2)));
+        int distance = (int) (Math.sqrt(Math.pow(targetScreenX - screenX, 2) + Math.pow(targetScreenY - screenY, 2)));
+        if (distance == 0) {
+            this.isMoving = false;
+            callback.run();
+            return;
+        }
+
+        int delay = (this.getSprite().length() * this.getSprite().getTiming()) / distance;
 
         this.setAbsoluteCoords(true);
         Timer t = new Timer(delay, (ae) -> {

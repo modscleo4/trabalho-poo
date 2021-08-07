@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.Timer;
 
@@ -17,6 +18,8 @@ public class Logica implements ILogica {
     }
 
     public void executa() {
+        AtomicBoolean roda = new AtomicBoolean(true);
+
         this.players = new ArrayList<>();
         this.players.add(new Player(0, 1));
         this.players.add(new Player(16, 1));
@@ -24,10 +27,20 @@ public class Logica implements ILogica {
         this.jogo.sendCommand(1, "READY", new String[] { "P2" });
 
         Timer en = new Timer(2000, (ae) -> {
+            if (!roda.get()) {
+                ((Timer) ae.getSource()).stop();
+                return;
+            }
+
             this.doEnemiesHit();
         });
 
         Timer t = new Timer(10000, (ae) -> {
+            if (!roda.get()) {
+                ((Timer) ae.getSource()).stop();
+                return;
+            }
+
             Enemy enemy = this.spawnEnemy();
             if (enemy == null) {
                 return;
@@ -47,8 +60,7 @@ public class Logica implements ILogica {
                 //
             }
 
-            en.stop();
-            t.stop();
+            roda.set(false);
         }).start();
     }
 
