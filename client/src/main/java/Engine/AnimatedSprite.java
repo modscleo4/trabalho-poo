@@ -88,10 +88,6 @@ public class AnimatedSprite extends Sprite {
     }
 
     private void setIndex(int index) {
-        if (this.getIndex() == index) {
-            return;
-        }
-
         this.index = index;
         this.setPath(this.getSprites()[this.index]);
     }
@@ -101,10 +97,6 @@ public class AnimatedSprite extends Sprite {
     }
 
     public void setTiming(int timing) {
-        if (this.getTiming() == timing) {
-            return;
-        }
-
         this.timing = timing;
     }
 
@@ -113,10 +105,6 @@ public class AnimatedSprite extends Sprite {
     }
 
     public void setPreAnimated(boolean preAnimated) {
-        if (this.isPreAnimated() == preAnimated) {
-            return;
-        }
-
         this.preAnimated = preAnimated;
     }
 
@@ -126,10 +114,6 @@ public class AnimatedSprite extends Sprite {
 
     @Override
     public void setUseDirection(boolean useDirection) {
-        if (this.isUsingDirection() == useDirection) {
-            return;
-        }
-
         super.setUseDirection(useDirection);
 
         if (useDirection) {
@@ -143,10 +127,6 @@ public class AnimatedSprite extends Sprite {
 
     @Override
     public void setDirection(String direction) {
-        if (this.getDirection() != null && this.getDirection().equals(direction)) {
-            return;
-        }
-
         super.setDirection(direction);
 
         this.sprites = SpriteManager.spritesInDirectory(this.spritesPath + "/" + this.getDirection())

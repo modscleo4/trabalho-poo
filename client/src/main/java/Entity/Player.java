@@ -113,10 +113,6 @@ public abstract class Player extends GameEntity {
     }
 
     public void setLife(int life) {
-        if (this.getLife() == life) {
-            return;
-        }
-
         if (life < 0) {
             life = 0;
         }
@@ -251,10 +247,6 @@ public abstract class Player extends GameEntity {
     }
 
     public void setName(String name) {
-        if (this.getName() != null && this.getName().equals(name)) {
-            return;
-        }
-
         this.name = name;
     }
 

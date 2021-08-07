@@ -38,18 +38,10 @@ public abstract class BaseObject {
     }
 
     public void setX(int x) {
-        if (this.getX() == x) {
-            return;
-        }
-
         this.x = x;
     }
 
     public void setScreenX(int screenX) {
-        if (this.getScreenX() == screenX) {
-            return;
-        }
-
         this.screenX = screenX;
     }
 
@@ -76,18 +68,10 @@ public abstract class BaseObject {
     }
 
     public void setY(int y) {
-        if (this.getY() == y) {
-            return;
-        }
-
         this.y = y;
     }
 
     public void setScreenY(int screenY) {
-        if (this.getScreenY() == screenY) {
-            return;
-        }
-
         this.screenY = screenY;
     }
 
@@ -96,10 +80,6 @@ public abstract class BaseObject {
     }
 
     public void setWidth(int width) {
-        if (this.getWidth() == width) {
-            return;
-        }
-
         this.width = width;
     }
 
@@ -108,10 +88,6 @@ public abstract class BaseObject {
     }
 
     public void setHeight(int height) {
-        if (this.getHeight() == height) {
-            return;
-        }
-
         this.height = height;
     }
 
@@ -120,10 +96,6 @@ public abstract class BaseObject {
     }
 
     public void setSolid(boolean solid) {
-        if (this.isSolid() == solid) {
-            return;
-        }
-
         this.solid = solid;
     }
 
@@ -132,10 +104,6 @@ public abstract class BaseObject {
     }
 
     public void setFlipped(boolean flipped) {
-        if (this.isFlipped() == flipped) {
-            return;
-        }
-
         this.flipped = flipped;
     }
 
@@ -144,10 +112,6 @@ public abstract class BaseObject {
     }
 
     public void setAbsoluteCoords(boolean absoluteCoords) {
-        if (this.isAbsoluteCoords() == absoluteCoords) {
-            return;
-        }
-
         this.absoluteCoords = absoluteCoords;
     }
 
@@ -156,10 +120,6 @@ public abstract class BaseObject {
     }
 
     public void setVisible(boolean visible) {
-        if (this.isVisible() == visible) {
-            return;
-        }
-
         this.visible = visible;
     }
 
@@ -168,10 +128,6 @@ public abstract class BaseObject {
     }
 
     public void setCenterScreen(boolean centerScreen) {
-        if (this.isCenterScreen() == centerScreen) {
-            return;
-        }
-
         this.centerScreen = centerScreen;
     }
 
