@@ -32,8 +32,9 @@ public class Server {
                 } catch (IOException e) {
                     e.printStackTrace();
                     System.out.println("Accept falhou");
-                    System.exit(1);
+                    continue;
                 }
+
                 System.out.println("Accept Funcionou!");
                 jogo.adicionaJogador(clientSocket);
             }

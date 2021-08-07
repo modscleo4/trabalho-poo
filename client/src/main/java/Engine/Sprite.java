@@ -1,6 +1,6 @@
 package Engine;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 
 public class Sprite extends BaseObject {
@@ -46,7 +46,7 @@ public class Sprite extends BaseObject {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         if (this.getImage() == null) {
             return;
         }

@@ -2,7 +2,7 @@ package Entity;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
@@ -204,6 +204,10 @@ public abstract class Player extends GameEntity {
         }
 
         if (GameGlobals.map.enemyAt(x, y) == null) {
+            Integer dmg = attackQueue.poll();
+            if (dmg != null) {
+                this.attack(dmg.intValue());
+            }
             return;
         }
 
@@ -243,7 +247,7 @@ public abstract class Player extends GameEntity {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         super.draw(g);
 
         AtomicInteger x = new AtomicInteger(this.getScreenX() + 10);
@@ -275,7 +279,7 @@ public abstract class Player extends GameEntity {
         });
     }
 
-    public void drawLifeBar(Graphics g) {
+    public void drawLifeBar(Graphics2D g) {
         if (this.name.equals("omori")) {
             Sprite heart = new Sprite("omori/icon/0", 4, 4, false);
             heart.setAbsoluteCoords(true);

@@ -1,6 +1,6 @@
 package Engine;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import javax.swing.Timer;
 
 public class AnimatedSprite extends Sprite {
@@ -135,7 +135,7 @@ public class AnimatedSprite extends Sprite {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         super.draw(g);
     }
 }

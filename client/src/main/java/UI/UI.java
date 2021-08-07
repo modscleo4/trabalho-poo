@@ -1,6 +1,6 @@
 package UI;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public abstract class UI {
     private boolean visible = false;
@@ -13,5 +13,5 @@ public abstract class UI {
         this.visible = visible;
     }
 
-    abstract void draw(Graphics g);
+    public abstract void draw(Graphics2D g);
 }

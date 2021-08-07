@@ -2,7 +2,7 @@ package UI;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import Engine.GameGlobals;
 import UI.Components.Text;
@@ -11,7 +11,7 @@ public class EndUI extends UI {
     private Text txt = new Text("", 0, 0);
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         this.txt.setAbsoluteCoords(true);
         this.txt.setCenterScreen(true);
 

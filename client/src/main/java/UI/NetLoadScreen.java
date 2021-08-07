@@ -1,6 +1,6 @@
 package UI;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import Engine.GameGlobals;
 import Map.MapManager;
@@ -28,7 +28,7 @@ public class NetLoadScreen extends UI {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         if (this.ended) {
             return;
         }

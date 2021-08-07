@@ -1,9 +1,8 @@
 package UI;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import Engine.GameGlobals;
-import Engine.Network;
 import Engine.SoundManager;
 import Entity.Slime;
 import UI.Components.Text;
@@ -36,7 +35,7 @@ public class BootScreen extends UI {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         if (this.ended) {
             return;
         }
@@ -54,7 +53,6 @@ public class BootScreen extends UI {
 
                 this.slime.getSprite().stop();
                 this.slime.destroy();
-                GameGlobals.network = new Network("127.0.0.1", 8080);
                 this.ended = true;
             });
 

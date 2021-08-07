@@ -121,6 +121,14 @@ public class Map {
         enemy.getSprite().animate();
     }
 
+    public void removeEnemy(Enemy enemy) {
+        if (!this.sprites[2].contains(enemy)) {
+            return;
+        }
+
+        this.sprites[2].remove(enemy);
+    }
+
     public void playBG() {
         if (!this.bgPlaying) {
             this.bgPlaying = true;

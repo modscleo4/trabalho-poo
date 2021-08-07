@@ -23,8 +23,8 @@ public class Logica implements ILogica {
         this.players = new ArrayList<>();
         this.players.add(new Player(0, 1));
         this.players.add(new Player(16, 1));
-        this.jogo.sendCommand(0, "READY", new String[] { "P1" });
-        this.jogo.sendCommand(1, "READY", new String[] { "P2" });
+        this.jogo.sendCommand(0, "READY", new String[] { "P1", "0", "1" });
+        this.jogo.sendCommand(1, "READY", new String[] { "P2", "16", "1" });
 
         Timer en = new Timer(2000, (ae) -> {
             if (!roda.get()) {
@@ -97,7 +97,7 @@ public class Logica implements ILogica {
     }
 
     public boolean hitEnemy(int x, int y, int damage) {
-        if (this.enemies[x][y] == null) {
+        if (x < 0 || x > 16 || y < 0 || y > 12 || this.enemies[x][y] == null) {
             return false;
         }
 

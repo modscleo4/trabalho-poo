@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -19,6 +20,7 @@ import Engine.Settings;
 import UI.BootScreen;
 import UI.EndUI;
 import UI.LoadScreen;
+import UI.LoginUI;
 import UI.NetLoadScreen;
 import UI.PauseUI;
 
@@ -27,6 +29,7 @@ public class Desenho extends JPanel {
     private PauseUI pauseUI = new PauseUI();
     private EndUI endUI = new EndUI();
     private LoadScreen loadScreen = new LoadScreen();
+    private LoginUI loginUI = new LoginUI();
     private NetLoadScreen netLoadScreen = new NetLoadScreen();
 
     Desenho() {
@@ -84,7 +87,7 @@ public class Desenho extends JPanel {
         }
     }
 
-    private void draw(Graphics g) {
+    private void draw(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 
@@ -121,7 +124,8 @@ public class Desenho extends JPanel {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics _g) {
+        Graphics2D g = (Graphics2D) _g;
         Instant timeStart = Instant.now();
 
         try {
@@ -133,6 +137,8 @@ public class Desenho extends JPanel {
                 this.loadScreen.draw(g);
             } else if (!this.bootScreen.isEnded()) {
                 this.bootScreen.draw(g);
+            } else if (!this.loginUI.isEnded()) {
+                this.loginUI.draw(g);
             } else if (!this.netLoadScreen.isEnded()) {
                 this.netLoadScreen.draw(g);
             } else {

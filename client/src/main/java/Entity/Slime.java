@@ -2,7 +2,7 @@ package Entity;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.Timer;
@@ -74,7 +74,7 @@ public class Slime extends Enemy {
         }
 
         if (life == 0) {
-            this.setVisible(false);
+            GameGlobals.map.removeEnemy(this);
 
             if (this.internalTimer != null) {
                 this.internalTimer.stop();
@@ -131,7 +131,7 @@ public class Slime extends Enemy {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         super.draw(g);
 
         AtomicInteger x = new AtomicInteger(this.getScreenX() + 10);

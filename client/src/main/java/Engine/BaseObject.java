@@ -1,6 +1,6 @@
 package Engine;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public abstract class BaseObject {
     private int x;
@@ -131,5 +131,5 @@ public abstract class BaseObject {
         this.centerScreen = centerScreen;
     }
 
-    public abstract void draw(Graphics g);
+    public abstract void draw(Graphics2D g);
 }

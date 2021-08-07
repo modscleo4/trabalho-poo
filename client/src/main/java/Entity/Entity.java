@@ -1,6 +1,6 @@
 package Entity;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -305,7 +305,7 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         AnimatedSprite sprite = this.getSprite();
         if (sprite == null) {
             return;

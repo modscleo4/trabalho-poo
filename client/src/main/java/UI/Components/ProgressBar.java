@@ -1,17 +1,14 @@
 package UI.Components;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
-import Engine.AnimatedSprite;
-import Entity.Entity;
-
-public class ProgressBar extends Entity {
+public class ProgressBar extends Component {
     private Color color;
     private int percentage;
 
     public ProgressBar(int x, int y, int width, int height) {
-        super(new AnimatedSprite[] { null }, x, y);
+        super(x, y);
         this.setWidth(width);
         this.setHeight(height);
         this.setAbsoluteCoords(true);
@@ -39,7 +36,7 @@ public class ProgressBar extends Entity {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.fillRect(this.getScreenX(), this.getScreenY(), this.getWidth(), this.getHeight());
         g.setColor(color);

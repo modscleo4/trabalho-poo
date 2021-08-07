@@ -15,6 +15,7 @@ public final class GameGlobals {
     public static boolean loaded = false;
     public static boolean netLoaded = false;
     public static boolean paused = false;
+    public static boolean cancelEvents = false;
 
     public static Network network;
 

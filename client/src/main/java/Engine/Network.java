@@ -112,6 +112,20 @@ public class Network {
 
                     break;
 
+                case "COORD": {
+                    int x = Integer.parseInt(args[1]);
+                    int y = Integer.parseInt(args[2]);
+
+                    if (args[0].equals("P1")) {
+                        GameGlobals.player.setX(x);
+                        GameGlobals.player.setY(y);
+                    } else if (args[0].equals("P2")) {
+                        GameGlobals.player2.setX(x);
+                        GameGlobals.player2.setY(y);
+                    }
+                    break;
+                }
+
                 case "MOVE":
                     int dx = Integer.parseInt(args[1]);
                     int dy = Integer.parseInt(args[2]);

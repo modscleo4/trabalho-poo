@@ -42,6 +42,9 @@ public class Jogo implements IJogo {
 
                         Player p = logica.players.get(numJogador);
 
+                        sendCommand(numJogador, "COORD", new String[] { "P1", "" + p.x, "" + p.y });
+                        sendCommand(numAdversario, "COORD", new String[] { "P2", "" + p.x, "" + p.y });
+
                         switch (command) {
                             case "MOVE":
                                 if (!logica.movePlayer(numJogador, Integer.parseInt(args[0]),

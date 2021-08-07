@@ -2,22 +2,19 @@ package UI.Components;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 
-import Engine.AnimatedSprite;
-import Entity.Entity;
-
-public class Text extends Entity {
+public class Text extends Component {
     private String text;
     private Font font;
     private Color color;
     protected MouseAdapter handler;
 
     public Text(String text, int x, int y) {
-        super(new AnimatedSprite[] { null }, x, y);
+        super(x, y);
         this.setX(x);
         this.setY(y);
         this.setText(text);
@@ -76,7 +73,7 @@ public class Text extends Entity {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         super.draw(g);
         g.setFont(this.getFont());
         g.setColor(this.getColor());
