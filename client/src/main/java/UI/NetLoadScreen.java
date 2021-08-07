@@ -9,13 +9,13 @@ import UI.Components.Text;
 public class NetLoadScreen extends UI {
     private boolean started = false;
     private boolean ended = false;
-    private Text text;
+    private Text txt;
     private Thread t;
 
     public NetLoadScreen() {
-        this.text = new Text("Aguardando 2º jogador...", 0, 0);
-        this.text.setAbsoluteCoords(true);
-        this.text.setCenterScreen(true);
+        this.txt = new Text("Aguardando 2º jogador...", 0, 0);
+        this.txt.setAbsoluteCoords(true);
+        this.txt.setCenterScreen(true);
     }
 
     public boolean isEnded() {
@@ -28,12 +28,21 @@ public class NetLoadScreen extends UI {
     }
 
     @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+
+        this.txt.setVisible(visible);
+    }
+
+    @Override
     public void draw(Graphics2D g) {
         if (this.ended) {
             return;
         }
 
         if (!this.started) {
+            this.setVisible(true);
+
             this.t = new Thread(() -> {
                 while (!GameGlobals.network.isReady()) {
                     try {
@@ -47,12 +56,21 @@ public class NetLoadScreen extends UI {
                 GameGlobals.map = MapManager.getMap1();
 
                 this.ended = true;
+
+                this.setVisible(false);
             });
 
             this.t.start();
         }
 
         this.started = true;
-        this.text.draw(g);
+        this.txt.draw(g);
+    }
+
+    @Override
+    public void close() {
+        super.close();
+
+        this.txt.close();
     }
 }

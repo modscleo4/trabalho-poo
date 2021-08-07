@@ -52,6 +52,17 @@ public class SoundManager {
         return 0;
     }
 
+    public static String getCurrentSpeakerName() {
+        int audioMixer = Settings.audioOutputMixer;
+        if (audioMixer == -1) {
+            audioMixer = SoundManager.getSystemAudioOutputMixer();
+        }
+
+        Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
+
+        return mixerInfo[audioMixer].getName();
+    }
+
     public static Sound playSound(final String file) {
         return playSound(file, false);
     }

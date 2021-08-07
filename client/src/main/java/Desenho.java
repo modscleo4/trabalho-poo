@@ -33,6 +33,13 @@ public class Desenho extends JPanel {
     private NetLoadScreen netLoadScreen = new NetLoadScreen();
 
     Desenho() {
+        this.bootScreen.setVisible(false);
+        this.pauseUI.setVisible(false);
+        this.endUI.setVisible(false);
+        this.loadScreen.setVisible(false);
+        this.loginUI.setVisible(false);
+        this.netLoadScreen.setVisible(false);
+
         this.setMaximumSize(new Dimension(GameGlobals.width, GameGlobals.height));
         this.setPreferredSize(new Dimension(GameGlobals.width, GameGlobals.height));
 
@@ -109,11 +116,13 @@ public class Desenho extends JPanel {
             g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
             g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
 
+            endUI.setVisible(true);
             endUI.draw(g);
         } else if (GameGlobals.result.equals("lost")) {
             g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
             g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
 
+            endUI.setVisible(true);
             endUI.draw(g);
         }
 

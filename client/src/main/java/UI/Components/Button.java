@@ -1,8 +1,11 @@
 package UI.Components;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+
+import Engine.GameGlobals;
 
 public class Button extends Text {
     private Color activeColor = Color.GRAY;
@@ -32,11 +35,19 @@ public class Button extends Text {
     @Override
     public void handleMouseEntered(MouseEvent e) {
         this.setColor(this.getActiveColor());
+
+        if (GameGlobals.mainWindow != null) {
+            GameGlobals.mainWindow.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
     }
 
     @Override
     public void handleMouseExited(MouseEvent e) {
         this.setColor(this.getInactiveColor());
+
+        if (GameGlobals.mainWindow != null) {
+            GameGlobals.mainWindow.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
     }
 
     public Color getActiveColor() {

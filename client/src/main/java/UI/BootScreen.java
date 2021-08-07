@@ -35,12 +35,22 @@ public class BootScreen extends UI {
     }
 
     @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+
+        this.slime.setVisible(visible);
+        this.txt.setVisible(visible);
+    }
+
+    @Override
     public void draw(Graphics2D g) {
         if (this.ended) {
             return;
         }
 
         if (!this.started) {
+            this.setVisible(true);
+
             SoundManager.playSound("start");
             this.slime.jump();
 
@@ -53,7 +63,10 @@ public class BootScreen extends UI {
 
                 this.slime.getSprite().stop();
                 this.slime.destroy();
+
                 this.ended = true;
+
+                this.setVisible(false);
             });
 
             this.t.start();
@@ -64,5 +77,13 @@ public class BootScreen extends UI {
         GameGlobals.paused = false;
         this.slime.draw(g);
         this.txt.draw(g);
+    }
+
+    @Override
+    public void close() {
+        super.close();
+
+        this.slime.close();
+        this.txt.close();
     }
 }

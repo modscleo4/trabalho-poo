@@ -69,6 +69,10 @@ public class Slime extends Enemy {
     }
 
     public void setLife(int life) {
+        if (this.getLife() == life) {
+            return;
+        }
+
         if (life < 0) {
             life = 0;
         }

@@ -40,9 +40,20 @@ public class LoginUI extends UI {
 
                 txtIP.setListening(false);
                 GameGlobals.network = new Network(txtIP.getText().trim(), 8080);
+
                 ended = true;
+
+                setVisible(false);
             }
         });
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+
+        this.txtIP.setVisible(visible);
+        this.btnLogin.setVisible(visible);
     }
 
     public boolean isEnded() {
@@ -56,12 +67,20 @@ public class LoginUI extends UI {
         }
 
         if (!this.started) {
-            //
+            this.setVisible(true);
         }
 
         this.started = true;
 
         this.txtIP.draw(g);
         this.btnLogin.draw(g);
+    }
+
+    @Override
+    public void close() {
+        super.close();
+
+        this.txtIP.close();
+        this.btnLogin.close();
     }
 }

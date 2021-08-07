@@ -28,12 +28,21 @@ public class LoadScreen extends UI {
     }
 
     @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+
+        this.progressBar.setVisible(visible);
+    }
+
+    @Override
     public void draw(Graphics2D g) {
         if (this.ended) {
             return;
         }
 
         if (!this.started) {
+            this.setVisible(true);
+
             new Thread(() -> {
                 int total = SpriteManager.filesInDirectory().size() + SoundManager.filesInDirectory().size();
                 this.progressBar.setPercentage(0);
@@ -51,10 +60,19 @@ public class LoadScreen extends UI {
                 GameGlobals.loaded = true;
 
                 this.ended = true;
+
+                this.setVisible(false);
             }).start();
         }
 
         this.started = true;
         this.progressBar.draw(g);
+    }
+
+    @Override
+    public void close() {
+        super.close();
+
+        this.progressBar.close();
     }
 }

@@ -51,6 +51,10 @@ public abstract class GameEntity extends Entity {
     }
 
     public void setUseDirection(boolean useDirection) {
+        if (this.isUsingDirection() == useDirection) {
+            return;
+        }
+
         this.useDirection = useDirection;
 
         for (AnimatedSprite sprite : this.getSprites()) {
@@ -67,6 +71,10 @@ public abstract class GameEntity extends Entity {
     }
 
     public void setDirection(String direction) {
+        if (this.getDirection() != null && this.getDirection().equals(direction)) {
+            return;
+        }
+
         if (!direction.equals("right") && !direction.equals("left") && !direction.equals("up")
                 && !direction.equals("down")) {
             return;

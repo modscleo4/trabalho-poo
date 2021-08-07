@@ -11,6 +11,13 @@ public class EndUI extends UI {
     private Text txt = new Text("", 0, 0);
 
     @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+
+        this.txt.setVisible(visible);
+    }
+
+    @Override
     public void draw(Graphics2D g) {
         this.txt.setAbsoluteCoords(true);
         this.txt.setCenterScreen(true);
@@ -26,5 +33,12 @@ public class EndUI extends UI {
         }
 
         this.txt.draw(g);
+    }
+
+    @Override
+    public void close() {
+        super.close();
+
+        this.txt.close();
     }
 }

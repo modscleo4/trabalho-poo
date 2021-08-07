@@ -20,6 +20,10 @@ public class Sprite extends BaseObject {
     }
 
     protected void setPath(String path) {
+        if (this.getPath() != null && this.getPath().equals(path)) {
+            return;
+        }
+
         this.path = path;
     }
 
@@ -34,6 +38,10 @@ public class Sprite extends BaseObject {
     }
 
     public void setDirection(String direction) {
+        if (this.getDirection() != null && this.getDirection().equals(direction)) {
+            return;
+        }
+
         this.direction = direction;
     }
 
@@ -42,6 +50,10 @@ public class Sprite extends BaseObject {
     }
 
     public void setUseDirection(boolean useDirection) {
+        if (this.isUsingDirection() == useDirection) {
+            return;
+        }
+
         this.useDirection = useDirection;
     }
 

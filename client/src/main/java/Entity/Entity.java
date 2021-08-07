@@ -16,6 +16,8 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
     private int currentSprite;
     protected boolean interactibleWhenPaused = false;
 
+    private boolean hasMouseEntered = false;
+
     public Entity(AnimatedSprite[] sprites, int x, int y) {
         this.sprites = sprites;
         this.currentSprite = 0;
@@ -56,12 +58,20 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
             return;
         }
 
+        if (!this.isVisible()) {
+            return;
+        }
+
         this.handleKeyPressed(e);
     }
 
     @Override
     public final void keyReleased(KeyEvent e) {
         if ((GameGlobals.paused || GameGlobals.result != "running") && !this.interactibleWhenPaused) {
+            return;
+        }
+
+        if (!this.isVisible()) {
             return;
         }
 
@@ -94,6 +104,10 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
             return;
         }
 
+        if (!this.isVisible()) {
+            return;
+        }
+
         if (e.getX() < this.getScreenX() || e.getX() > this.getScreenX() + this.getWidth()
                 || e.getY() < this.getScreenY() || e.getY() > this.getScreenY() + this.getHeight()) {
             return;
@@ -105,6 +119,10 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
     @Override
     public final void mouseReleased(MouseEvent e) {
         if ((GameGlobals.paused || GameGlobals.result != "running") && !this.interactibleWhenPaused) {
+            return;
+        }
+
+        if (!this.isVisible()) {
             return;
         }
 
@@ -127,15 +145,29 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
             return;
         }
 
+        if (!this.isVisible()) {
+            return;
+        }
+
         if (e.getX() < this.getScreenX() || e.getX() > this.getScreenX() + this.getWidth()
                 || e.getY() < this.getScreenY() || e.getY() > this.getScreenY() + this.getHeight()) {
-            this.handleMouseExited(e);
+            if (this.hasMouseEntered) {
+                this.handleMouseExited(e);
+
+                this.hasMouseEntered = false;
+            }
         } else {
             this.handleMouseEntered(e);
+
+            this.hasMouseEntered = true;
         }
     }
 
     public void setSprites(AnimatedSprite[] sprites) {
+        if (this.getSprites() != null && this.getSprites().equals(sprites)) {
+            return;
+        }
+
         this.sprites = sprites;
     }
 
@@ -148,6 +180,10 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
     }
 
     protected void setCurrentSprite(int currentSprite, boolean animate) {
+        if (this.getCurrentSprite() == currentSprite) {
+            return;
+        }
+
         if (currentSprite < 0 || currentSprite > this.sprites.length - 1) {
             return;
         }
@@ -167,11 +203,19 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
     }
 
     protected void setCurrentSprite(int currentSprite) {
+        if (this.getCurrentSprite() == currentSprite) {
+            return;
+        }
+
         this.setCurrentSprite(currentSprite, true);
     }
 
     @Override
     public void setX(int x) {
+        if (this.getX() == x) {
+            return;
+        }
+
         super.setX(x);
 
         for (AnimatedSprite sprite : this.getSprites()) {
@@ -185,6 +229,10 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
 
     @Override
     public void setY(int y) {
+        if (this.getY() == y) {
+            return;
+        }
+
         super.setY(y);
 
         for (AnimatedSprite sprite : this.getSprites()) {
@@ -198,6 +246,10 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
 
     @Override
     public void setWidth(int width) {
+        if (this.getWidth() == width) {
+            return;
+        }
+
         super.setWidth(width);
 
         for (AnimatedSprite sprite : this.getSprites()) {
@@ -211,6 +263,10 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
 
     @Override
     public void setHeight(int height) {
+        if (this.getHeight() == height) {
+            return;
+        }
+
         super.setHeight(height);
 
         for (AnimatedSprite sprite : this.getSprites()) {
@@ -224,6 +280,10 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
 
     @Override
     public void setFlipped(boolean flipped) {
+        if (this.isFlipped() == flipped) {
+            return;
+        }
+
         super.setFlipped(flipped);
 
         for (AnimatedSprite sprite : this.getSprites()) {
@@ -237,6 +297,10 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
 
     @Override
     public void setAbsoluteCoords(boolean absoluteCoords) {
+        if (this.isAbsoluteCoords() == absoluteCoords) {
+            return;
+        }
+
         super.setAbsoluteCoords(absoluteCoords);
 
         for (AnimatedSprite sprite : this.getSprites()) {
@@ -254,6 +318,10 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
 
     @Override
     public void setVisible(boolean visible) {
+        if (this.isVisible() == visible) {
+            return;
+        }
+
         super.setVisible(visible);
 
         for (AnimatedSprite sprite : this.getSprites()) {
@@ -263,10 +331,18 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
 
             sprite.setVisible(visible);
         }
+
+        if (!visible) {
+            this.handleMouseExited(null);
+        }
     }
 
     @Override
     public void setCenterScreen(boolean centerScreen) {
+        if (this.isCenterScreen() == centerScreen) {
+            return;
+        }
+
         super.setCenterScreen(centerScreen);
 
         for (AnimatedSprite sprite : this.getSprites()) {
@@ -280,6 +356,10 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
 
     @Override
     public void setScreenX(int screenX) {
+        if (this.getScreenX() == screenX) {
+            return;
+        }
+
         super.setScreenX(screenX);
 
         for (AnimatedSprite sprite : this.getSprites()) {
@@ -293,6 +373,10 @@ public abstract class Entity extends BaseObject implements KeyListener, MouseInp
 
     @Override
     public void setScreenY(int screenY) {
+        if (this.getScreenY() == screenY) {
+            return;
+        }
+
         super.setScreenY(screenY);
 
         for (AnimatedSprite sprite : this.getSprites()) {

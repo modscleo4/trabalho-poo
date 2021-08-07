@@ -14,6 +14,10 @@ public class Pair<K, V> {
     }
 
     public void setFirst(K first) {
+        if (this.getFirst() != null && this.getFirst().equals(first)) {
+            return;
+        }
+
         this.first = first;
     }
 
@@ -22,6 +26,10 @@ public class Pair<K, V> {
     }
 
     public void setSecond(V second) {
+        if (this.getSecond() != null && this.getSecond().equals(second)) {
+            return;
+        }
+
         this.second = second;
     }
 

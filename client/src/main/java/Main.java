@@ -135,8 +135,7 @@ public class Main extends JFrame {
 
     static public void main(String[] args) {
         Main f = new Main();
-        f.setVisible(true);
-
         GameGlobals.mainWindow = f;
+        f.setVisible(true);
     }
 }

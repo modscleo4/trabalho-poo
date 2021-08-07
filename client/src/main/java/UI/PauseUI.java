@@ -16,6 +16,8 @@ public class PauseUI extends UI {
     private SettingsUI settingsUI = new SettingsUI();
 
     public PauseUI() {
+        this.settingsUI.setVisible(false);
+
         this.btnReturn = new Button("Voltar", 48, GameGlobals.height - 48 - 80);
         this.btnReturn.setAbsoluteCoords(true);
         this.btnReturn.setHandler(new MouseAdapter() {
@@ -48,10 +50,16 @@ public class PauseUI extends UI {
     public void setVisible(boolean visible) {
         super.setVisible(visible);
 
-        if (visible) {
-            GameGlobals.map.pauseBG();
-        } else {
-            GameGlobals.map.playBG();
+        this.btnReturn.setVisible(visible);
+        this.btnSettings.setVisible(visible);
+        this.btnExit.setVisible(visible);
+
+        if (GameGlobals.map != null) {
+            if (visible) {
+                GameGlobals.map.pauseBG();
+            } else {
+                GameGlobals.map.playBG();
+            }
         }
     }
 
@@ -69,5 +77,15 @@ public class PauseUI extends UI {
         btnExit.draw(g);
 
         settingsUI.draw(g);
+    }
+
+    @Override
+    public void close() {
+        super.close();
+
+        this.btnReturn.close();
+        this.btnSettings.close();
+        this.btnExit.close();
+        this.settingsUI.close();
     }
 }
