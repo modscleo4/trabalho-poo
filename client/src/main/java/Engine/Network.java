@@ -91,17 +91,23 @@ public class Network {
             String[] args = Arrays.copyOfRange(out, 1, out.length);
 
             switch (command) {
-                case "READY":
+                case "READY": {
+                    int x1 = Integer.parseInt(args[1]);
+                    int y1 = Integer.parseInt(args[2]);
+                    int x2 = Integer.parseInt(args[3]);
+                    int y2 = Integer.parseInt(args[4]);
+
                     if (args[0].equals("P1")) {
-                        GameGlobals.player = new Omori(0, 1);
-                        GameGlobals.player2 = new Aubrey(16, 1);
+                        GameGlobals.player = new Omori(x1, y1);
+                        GameGlobals.player2 = new Aubrey(x2, y2);
                     } else {
-                        GameGlobals.player = new Aubrey(16, 1);
-                        GameGlobals.player2 = new Omori(0, 1);
+                        GameGlobals.player = new Aubrey(x1, y1);
+                        GameGlobals.player2 = new Omori(x2, y2);
                     }
 
                     this.ready = true;
                     break;
+                }
 
                 case "ATTACK":
                     if (args[0].equals("P1")) {
