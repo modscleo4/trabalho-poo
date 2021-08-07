@@ -69,8 +69,9 @@ public class Logica implements ILogica {
     }
 
     public boolean colide(int player, int x, int y) {
-        return x < 0 || x > 16 || y < 0 || y > 12 || x == this.players.get(1 - player).x
-                || y == this.players.get(1 - player).y || this.enemies[x][y] != null;
+        return x < 0 || x > 16 || y < 0 || y > 12
+                || (x == this.players.get(1 - player).x && y == this.players.get(1 - player).y)
+                || this.enemies[x][y] != null;
     }
 
     public boolean movePlayer(int player, int dx, int dy) {

@@ -69,6 +69,10 @@ public class Text extends Component {
 
     @Override
     public void handleMousePressed(MouseEvent e) {
+        if (this.handler == null) {
+            return;
+        }
+
         this.handler.mousePressed(e);
     }
 

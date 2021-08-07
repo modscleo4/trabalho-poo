@@ -152,12 +152,16 @@ public abstract class Player extends GameEntity {
     }
 
     public void hit(int damage) {
-        this.setCurrentSprite(HIT);
+        if (this.moveThread == null && this.attackThread == null) {
+            this.setCurrentSprite(HIT);
+        }
 
         this.setLife(this.getLife() - damage);
         SoundManager.playSound("slime_hit");
 
-        this.resetAnimation(IDLE);
+        if (this.moveThread == null && this.attackThread == null) {
+            this.resetAnimation(IDLE);
+        }
     }
 
     public void move(int dx, int dy) {

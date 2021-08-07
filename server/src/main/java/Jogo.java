@@ -121,19 +121,17 @@ public class Jogo implements IJogo {
     }
 
     void sendCommand(int player, String command, String[] args) {
-        new Thread(() -> {
-            try {
-                if (args == null) {
-                    os[player].writeUTF(command);
-                } else {
-                    os[player].writeUTF(command + " " + String.join(" ", args));
-                }
-
-                os[player].flush();
-            } catch (IOException e) {
-                //
+        try {
+            if (args == null) {
+                os[player].writeUTF(command);
+            } else {
+                os[player].writeUTF(command + " " + String.join(" ", args));
             }
-        }).start();
+
+            os[player].flush();
+        } catch (IOException e) {
+            //
+        }
     }
 
     void sendCommand(int player, String command) {
