@@ -96,22 +96,8 @@ public class Main extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 globMove = KeyEvent.getKeyText(e.getKeyCode());
-                if (e.getKeyCode() == KeyEvent.VK_ENTER && e.isAltDown()) {
-                    dispose();
-
-                    if (Settings.fullscreen) {
-                        setExtendedState(JFrame.NORMAL);
-                        setUndecorated(false);
-                        pack();
-                        setLocationRelativeTo(null);
-                    } else {
-                        setExtendedState(JFrame.MAXIMIZED_BOTH);
-                        setUndecorated(true);
-                    }
-
-                    setVisible(true);
-
-                    Settings.fullscreen = !Settings.fullscreen;
+                if (e.getKeyCode() == KeyEvent.VK_F11 || (e.getKeyCode() == KeyEvent.VK_ENTER && e.isAltDown())) {
+                    Settings.toggleFullScreen();
 
                     return;
                 } else if (e.getKeyCode() == Settings.KEY_PAUSE) {
@@ -137,5 +123,7 @@ public class Main extends JFrame {
     static public void main(String[] args) {
         Main f = new Main();
         f.setVisible(true);
+
+        GameGlobals.mainWindow = f;
     }
 }

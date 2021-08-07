@@ -150,54 +150,75 @@ public abstract class Player extends GameEntity {
     }
 
     public void move(int dx, int dy) {
-        this.moveThread = new Thread(() -> {
-            super.move(MOVE, dx, dy, () -> {
-                this.resetAnimation(IDLE);
+        new Thread(() -> {
+            while (this.moveThread != null) {
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
 
-                this.moveThread = null;
+                }
+            }
+
+            this.moveThread = new Thread(() -> {
+                super.move(MOVE, dx, dy, () -> {
+                    this.resetAnimation(IDLE);
+
+                    this.moveThread = null;
+                });
             });
-        });
 
-        this.moveThread.start();
+            this.moveThread.start();
+        }).start();
     }
 
     public void attack(int damage) {
-        int x = this.getX();
-        int y = this.getY();
+        new Thread(() -> {
+            while (this.moveThread != null) {
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
 
-        if (this.useDirection) {
-            if (this.getDirection().equals("up")) {
-                y--;
-            } else if (this.getDirection().equals("down")) {
-                y++;
-            } else if (this.getDirection().equals("left")) {
-                x--;
-            } else if (this.getDirection().equals("right")) {
-                x++;
-            }
-        }
-
-        if (GameGlobals.map.enemyAt(x, y) == null) {
-            return;
-        }
-
-        GameGlobals.map.enemyAt(x, y).hit(damage);
-
-        this.attackThread = new Thread(() -> {
-            this.setCurrentSprite(ATTACK);
-
-            try {
-                Thread.sleep(this.getSprite().getTiming() * (this.getSprite().length() - this.getSprite().getIndex()));
-            } catch (InterruptedException e) {
-                //
+                }
             }
 
-            this.resetAnimation(IDLE);
-            this.attackThread.interrupt();
-            this.attackThread = null;
-        });
+            int x = this.getX();
+            int y = this.getY();
 
-        this.attackThread.start();
+            if (this.useDirection) {
+                if (this.getDirection().equals("up")) {
+                    y--;
+                } else if (this.getDirection().equals("down")) {
+                    y++;
+                } else if (this.getDirection().equals("left")) {
+                    x--;
+                } else if (this.getDirection().equals("right")) {
+                    x++;
+                }
+            }
+
+            if (GameGlobals.map.enemyAt(x, y) == null) {
+                return;
+            }
+
+            GameGlobals.map.enemyAt(x, y).hit(damage);
+
+            this.attackThread = new Thread(() -> {
+                this.setCurrentSprite(ATTACK);
+
+                try {
+                    Thread.sleep(
+                            this.getSprite().getTiming() * (this.getSprite().length() - this.getSprite().getIndex()));
+                } catch (InterruptedException e) {
+                    //
+                }
+
+                this.resetAnimation(IDLE);
+                this.attackThread.interrupt();
+                this.attackThread = null;
+            });
+
+            this.attackThread.start();
+        }).start();
     }
 
     public void attack() {

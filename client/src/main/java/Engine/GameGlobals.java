@@ -4,6 +4,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
 
 import Entity.Player;
@@ -40,4 +41,6 @@ public final class GameGlobals {
     public static final List<MouseInputListener> mouseInputListeners = new ArrayList<>();
 
     public static final UILayer uiLayer = new UILayer();
+
+    public static JFrame mainWindow;
 }

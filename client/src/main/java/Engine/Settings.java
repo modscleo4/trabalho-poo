@@ -2,6 +2,8 @@ package Engine;
 
 import java.awt.event.KeyEvent;
 
+import javax.swing.JFrame;
+
 public class Settings {
     public static boolean VSync = true;
     public static boolean fullscreen = false;
@@ -23,4 +25,22 @@ public class Settings {
     public static int KEY_INVENTORY = KeyEvent.VK_E;
 
     public static int KEY_PAUSE = KeyEvent.VK_ESCAPE;
+
+    public static void toggleFullScreen() {
+        GameGlobals.mainWindow.dispose();
+
+        if (Settings.fullscreen) {
+            GameGlobals.mainWindow.setExtendedState(JFrame.NORMAL);
+            GameGlobals.mainWindow.setUndecorated(false);
+            GameGlobals.mainWindow.pack();
+            GameGlobals.mainWindow.setLocationRelativeTo(null);
+        } else {
+            GameGlobals.mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            GameGlobals.mainWindow.setUndecorated(true);
+        }
+
+        GameGlobals.mainWindow.setVisible(true);
+
+        Settings.fullscreen = !Settings.fullscreen;
+    }
 }
