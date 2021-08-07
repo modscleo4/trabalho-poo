@@ -20,11 +20,11 @@ public class MapManager {
             layers[z] = new ArrayList<>();
         }
 
-        for (int i = 0; i < GameGlobals.maxW; i++) {
-            for (int j = 0; j < GameGlobals.maxH; j++) {
-                layers[0].add(new Sprite("floor", i, j, false));
-            }
-        }
+        Sprite background = new Sprite("background/background_arena", 0, 0, false);
+        
+        background.setWidth(GameGlobals.width);
+        background.setHeight(GameGlobals.height);
+        layers[0].add(background);
 
         //Slime slime = new Slime(5, 5, false);
         //Rele rele = new Rele(4, 4);
