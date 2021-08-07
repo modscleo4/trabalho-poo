@@ -26,6 +26,15 @@ public class Logica implements ILogica {
         this.jogo.sendCommand(0, "READY", new String[] { "P1", "0", "1" });
         this.jogo.sendCommand(1, "READY", new String[] { "P2", "16", "1" });
 
+        this.jogo.sendCommand(0, "COORD",
+                new String[] { "P1", "" + this.players.get(0).x, "" + this.players.get(0).y });
+        this.jogo.sendCommand(0, "COORD",
+                new String[] { "P2", "" + this.players.get(1).x, "" + this.players.get(1).y });
+        this.jogo.sendCommand(1, "COORD",
+                new String[] { "P1", "" + this.players.get(1).x, "" + this.players.get(1).y });
+        this.jogo.sendCommand(1, "COORD",
+                new String[] { "P2", "" + this.players.get(0).x, "" + this.players.get(0).y });
+
         Timer en = new Timer(2000, (ae) -> {
             if (!roda.get()) {
                 ((Timer) ae.getSource()).stop();

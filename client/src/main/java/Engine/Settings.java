@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 
 public class Settings {
-    public static boolean VSync = false;
+    public static boolean VSync = true;
     public static boolean fullscreen = false;
 
     public static int audioOutputMixer = -1;
