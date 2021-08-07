@@ -6,8 +6,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import Engine.GameGlobals;
 import Engine.SoundManager;
 import Engine.SpriteManager;
+import UI.Components.ProgressBar;
 
-public class LoadScreen {
+public class LoadScreen extends UI {
     private boolean started = false;
     private boolean ended = false;
     private ProgressBar progressBar;
@@ -26,6 +27,7 @@ public class LoadScreen {
         this.ended = false;
     }
 
+    @Override
     public void draw(Graphics g) {
         if (this.ended) {
             return;

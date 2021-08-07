@@ -6,8 +6,9 @@ import Engine.GameGlobals;
 import Engine.Network;
 import Engine.SoundManager;
 import Entity.Slime;
+import UI.Components.Text;
 
-public class BootScreen {
+public class BootScreen extends UI {
     private boolean started = false;
     private boolean ended = false;
     private Slime slime;
@@ -34,6 +35,7 @@ public class BootScreen {
         this.ended = false;
     }
 
+    @Override
     public void draw(Graphics g) {
         if (this.ended) {
             return;

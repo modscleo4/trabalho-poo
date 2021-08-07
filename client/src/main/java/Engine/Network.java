@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import Entity.Aubrey;
 import Entity.Omori;
+import Entity.Slime;
 
 /* P1 - OMOLI, P2 - AUBREY */
 
@@ -90,11 +91,11 @@ public class Network {
             switch (command) {
                 case "READY":
                     if (args[0].equals("P1")) {
-                        GameGlobals.player = new Omori(1, 1);
-                        GameGlobals.player2 = new Aubrey(2, 2);
+                        GameGlobals.player = new Omori(0, 1);
+                        GameGlobals.player2 = new Aubrey(16, 1);
                     } else {
-                        GameGlobals.player = new Aubrey(2, 2);
-                        GameGlobals.player2 = new Omori(1, 1);
+                        GameGlobals.player = new Aubrey(16, 1);
+                        GameGlobals.player2 = new Omori(0, 1);
                     }
 
                     this.ready = true;
@@ -119,6 +120,34 @@ public class Network {
                         GameGlobals.player2.move(dx, dy);
                     }
                     break;
+
+                case "SPAWNENEMY": {
+                    int x = Integer.parseInt(args[0]);
+                    int y = Integer.parseInt(args[1]);
+
+                    GameGlobals.map.spawnEnemy(x, y);
+                    break;
+                }
+
+                case "ENEMYHIT": {
+                    int damage = Integer.parseInt(args[1]);
+                    int x = Integer.parseInt(args[2]);
+                    int y = Integer.parseInt(args[3]);
+
+                    Slime enemy = (Slime) GameGlobals.map.enemyAt(x, y);
+                    if (enemy == null) {
+                        return;
+                    }
+
+                    enemy.jump();
+
+                    if (args[0].equals("P1")) {
+                        GameGlobals.player.hit(damage);
+                    } else if (args[0].equals("P2")) {
+                        GameGlobals.player2.hit(damage);
+                    }
+                    break;
+                }
 
                 default:
                     break;

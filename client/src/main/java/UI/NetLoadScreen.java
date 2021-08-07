@@ -4,8 +4,9 @@ import java.awt.Graphics;
 
 import Engine.GameGlobals;
 import Map.MapManager;
+import UI.Components.Text;
 
-public class NetLoadScreen {
+public class NetLoadScreen extends UI {
     private boolean started = false;
     private boolean ended = false;
     private Text text;
@@ -26,6 +27,7 @@ public class NetLoadScreen {
         this.ended = false;
     }
 
+    @Override
     public void draw(Graphics g) {
         if (this.ended) {
             return;

@@ -112,7 +112,12 @@ public abstract class Player extends GameEntity {
         }
 
         if (life == 0) {
-            GameGlobals.result = "lost";
+            if (GameGlobals.player == this) {
+                GameGlobals.result = "lost";
+            } else {
+                GameGlobals.result = "won";
+            }
+
             this.setVisible(false);
         }
 
@@ -173,7 +178,7 @@ public abstract class Player extends GameEntity {
 
     public void attack(int damage) {
         new Thread(() -> {
-            while (this.moveThread != null) {
+            while (this.attackThread != null) {
                 try {
                     Thread.sleep(5);
                 } catch (InterruptedException e) {
@@ -254,7 +259,6 @@ public abstract class Player extends GameEntity {
 
         GameGlobals.uiLayer.addLayer(g2 -> {
             this.drawLifeBar(g2);
-            this.drawEnemyLifeBar(g2);
             if (this.takenDamage > 0) {
                 g2.setColor(Color.RED);
                 g2.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
@@ -268,27 +272,28 @@ public abstract class Player extends GameEntity {
     }
 
     public void drawLifeBar(Graphics g) {
-        Sprite heart = new Sprite("heart", 4, 4, false);
-        heart.setAbsoluteCoords(true);
-        heart.setWidth(24);
-        heart.setHeight(24);
-        heart.draw(g);
-        g.setColor(Color.BLACK);
-        g.fillRect(32, 8, 8 * 20, 16);
-        g.setColor(Color.RED);
-        g.fillRect(32, 8, 8 * this.life, 16);
-    }
+        if (this.name.equals("omori")) {
+            Sprite heart = new Sprite("omori/icon/0", 4, 4, false);
+            heart.setAbsoluteCoords(true);
+            heart.setWidth(24);
+            heart.setHeight(24);
+            heart.draw(g);
+            g.setColor(Color.BLACK);
+            g.fillRect(32, 8, 8 * 20, 16);
 
-    public void drawEnemyLifeBar(Graphics g) {
-        Sprite heart = new Sprite("heart", 788, 4, false);
-        heart.setAbsoluteCoords(true);
-        heart.setWidth(24);
-        heart.setHeight(24);
-        heart.draw(g);
-        g.setColor(Color.BLACK);
-        g.fillRect(624, 8, 8 * 20, 16);
-        g.setColor(Color.BLUE);
-        g.fillRect(624, 8, 8 * GameGlobals.player2.getLife(), 16);
+            g.setColor(Color.RED);
+            g.fillRect(32, 8, 8 * this.getLife(), 16);
+        } else {
+            Sprite heart = new Sprite("aubrey/icon/0", 788, 4, false);
+            heart.setAbsoluteCoords(true);
+            heart.setWidth(24);
+            heart.setHeight(24);
+            heart.draw(g);
+            g.setColor(Color.BLACK);
+            g.fillRect(624, 8, 8 * 20, 16);
+
+            g.setColor(Color.BLUE);
+            g.fillRect(624, 8, 8 * this.getLife(), 16);
+        }
     }
 }
-

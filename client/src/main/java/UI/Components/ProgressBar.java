@@ -1,4 +1,4 @@
-package UI;
+package UI.Components;
 
 import java.awt.Color;
 import java.awt.Graphics;

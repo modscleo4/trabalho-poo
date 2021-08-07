@@ -8,6 +8,7 @@ import Engine.Sound;
 import Engine.SoundManager;
 import Entity.Enemy;
 import Entity.Entity;
+import Entity.Slime;
 
 public class Map {
     private List<BaseObject>[] sprites;
@@ -108,6 +109,16 @@ public class Map {
         }
 
         return null;
+    }
+
+    public void spawnEnemy(int x, int y) {
+        if (this.enemyAt(x, y) != null) {
+            return;
+        }
+
+        Enemy enemy = new Slime(x, y, true);
+        this.sprites[2].add(enemy);
+        enemy.getSprite().animate();
     }
 
     public void playBG() {

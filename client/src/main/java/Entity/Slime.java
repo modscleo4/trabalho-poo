@@ -75,8 +75,11 @@ public class Slime extends Enemy {
 
         if (life == 0) {
             this.setVisible(false);
-            this.internalTimer.stop();
-            GameGlobals.result = "won";
+
+            if (this.internalTimer != null) {
+                this.internalTimer.stop();
+            }
+            //GameGlobals.result = "won";
         }
 
         if (this.damageThread != null) {

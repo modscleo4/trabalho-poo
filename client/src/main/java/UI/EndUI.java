@@ -5,10 +5,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 import Engine.GameGlobals;
+import UI.Components.Text;
 
-public class EndUI {
+public class EndUI extends UI {
     private Text txt = new Text("", 0, 0);
 
+    @Override
     public void draw(Graphics g) {
         this.txt.setAbsoluteCoords(true);
         this.txt.setCenterScreen(true);

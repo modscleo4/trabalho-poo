@@ -37,6 +37,7 @@ public class Server {
                 System.out.println("Accept Funcionou!");
                 jogo.adicionaJogador(clientSocket);
             }
+
             System.out.println("Iniciando jogo");
             jogo.iniciaLogica(new Logica(jogo));
             jogo.inicia();

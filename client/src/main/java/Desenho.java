@@ -95,17 +95,10 @@ public class Desenho extends JPanel {
             endUI.draw(g);
         }
 
-        if (GameGlobals.paused) {
-            g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
-            g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
+        pauseUI.setVisible(GameGlobals.paused);
+        pauseUI.draw(g);
 
-            pauseUI.draw(g);
-            GameGlobals.map.pauseBG();
-            //
-        } else {
-            GameGlobals.internalClock++;
-            GameGlobals.map.playBG();
-        }
+        GameGlobals.internalClock++;
     }
 
     @Override
@@ -170,8 +163,15 @@ public class Desenho extends JPanel {
                         System.getProperty("os.version"), System.getProperty("os.arch")), 0, 48);
                 g.drawString(String.format("RAM: %d MB/%d MB", Runtime.getRuntime().freeMemory() / 1024 / 1024,
                         Runtime.getRuntime().maxMemory() / 1024 / 1024), 0, 60);
-                g.drawString(String.format("X/Y: %d/%d", GameGlobals.player.getX(), GameGlobals.player.getY()), 0, 72);
-                g.drawString(String.format("Sprite: %s", GameGlobals.player.getSprite().getPath()), 0, 84);
+                g.drawString("Player 1", 0, 72);
+                g.drawString(String.format("X/Y: %d/%d", GameGlobals.player.getX(), GameGlobals.player.getY()), 4, 84);
+                g.drawString(String.format("Life: %d", GameGlobals.player.getLife()), 4, 96);
+                g.drawString(String.format("Sprite: %s", GameGlobals.player.getSprite().getPath()), 4, 108);
+                g.drawString("Player 2", 0, 120);
+                g.drawString(String.format("X/Y: %d/%d", GameGlobals.player2.getX(), GameGlobals.player2.getY()), 4,
+                        132);
+                g.drawString(String.format("Life: %d", GameGlobals.player2.getLife()), 4, 144);
+                g.drawString(String.format("Sprite: %s", GameGlobals.player2.getSprite().getPath()), 4, 156);
             }
 
             this.repaint();
