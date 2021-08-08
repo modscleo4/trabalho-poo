@@ -9,6 +9,7 @@ import Engine.Sprite;
 
 public class MapManager {
     public static Map map1;
+    public static Map gridMap;
 
     public static Map getMap1() {
         if (map1 != null) {
@@ -26,12 +27,6 @@ public class MapManager {
         background.setHeight(GameGlobals.height);
         layers[0].add(background);
 
-        for (int i = 0; i < GameGlobals.maxW; i++) {
-            for (int j = 0; j < GameGlobals.maxH; j++) {
-                layers[1].add(new Sprite("grid", i, j, false));
-            }
-        }
-
         //Slime slime = new Slime(5, 5, false);
         //Rele rele = new Rele(4, 4);
 
@@ -43,5 +38,28 @@ public class MapManager {
         map1 = new Map(layers, GameGlobals.maxW, GameGlobals.maxH, "bg1");
 
         return map1;
+    }
+
+    public static Map getGridMap() {
+        if (gridMap != null) {
+            return gridMap;
+        }
+
+        List<BaseObject>[] layers = new ArrayList[GameGlobals.maxZ];
+        for (int z = 0; z < layers.length; z++) {
+            layers[z] = new ArrayList<>();
+        }
+
+        for (int i = 0; i < GameGlobals.maxW; i++) {
+            for (int j = 0; j < GameGlobals.maxH; j++) {
+                layers[1].add(new Sprite("grid", i, j, false));
+            }
+        }
+
+        gridMap = new Map(layers, GameGlobals.maxW, GameGlobals.maxH, null);
+
+        gridMap.mount();
+
+        return gridMap;
     }
 }

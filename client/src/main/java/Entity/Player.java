@@ -282,7 +282,6 @@ public abstract class Player extends GameEntity {
         GameGlobals.uiLayer.addLayer(g2 -> {
             this.drawLifeBar(g2);
             this.drawScore(g2);
-            System.out.println(this.score);
             if (this.takenDamage > 0) {
                 g2.setColor(Color.RED);
                 g2.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));

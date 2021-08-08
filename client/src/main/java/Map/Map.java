@@ -1,9 +1,11 @@
 package Map;
 
+import java.awt.Graphics2D;
 import java.util.List;
 
 import Engine.AnimatedSprite;
 import Engine.BaseObject;
+import Engine.GameGlobals;
 import Engine.Sound;
 import Engine.SoundManager;
 import Entity.Enemy;
@@ -38,6 +40,20 @@ public class Map {
         }
 
         return this.map;
+    }
+
+    public void draw(Graphics2D g) {
+        for (int z = 0; z < GameGlobals.maxZ; z++) {
+            for (int i = 0; i < this.getMap().length; i++) {
+                for (int j = 0; j < this.getMap()[i].length; j++) {
+                    if (z >= this.getMap()[i][j].length || this.getMap()[i][j][z] == null) {
+                        continue;
+                    }
+
+                    this.getMap()[i][j][z].draw(g);
+                }
+            }
+        }
     }
 
     public void animateAllSprites() {

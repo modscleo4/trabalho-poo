@@ -17,6 +17,7 @@ import javax.swing.event.MouseInputListener;
 
 import Engine.GameGlobals;
 import Engine.Settings;
+import Map.MapManager;
 import UI.BootScreen;
 import UI.EndUI;
 import UI.LoadScreen;
@@ -98,17 +99,7 @@ public class Desenho extends JPanel {
         g.setColor(Color.BLACK);
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 
-        for (int z = 0; z < GameGlobals.maxZ; z++) {
-            for (int i = 0; i < GameGlobals.map.getMap().length; i++) {
-                for (int j = 0; j < GameGlobals.map.getMap()[i].length; j++) {
-                    if (z >= GameGlobals.map.getMap()[i][j].length || GameGlobals.map.getMap()[i][j][z] == null) {
-                        continue;
-                    }
-
-                    GameGlobals.map.getMap()[i][j][z].draw(g);
-                }
-            }
-        }
+        GameGlobals.map.draw(g);
 
         GameGlobals.uiLayer.draw(g);
 
@@ -206,6 +197,8 @@ public class Desenho extends JPanel {
                         132);
                 g.drawString(String.format("Life: %d", GameGlobals.player2.getLife()), 4, 144);
                 g.drawString(String.format("Sprite: %s", GameGlobals.player2.getSprite().getPath()), 4, 156);
+
+                MapManager.getGridMap().draw(g);
             }
 
             this.repaint();
