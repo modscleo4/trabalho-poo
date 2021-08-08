@@ -72,7 +72,7 @@ public class Jogo implements IJogo {
 
                                 int damage = logica.getDamage();
 
-                                if (!logica.hitEnemy(x, y, damage)) {
+                                if (!logica.hitEnemy(numJogador, x, y, damage)) {
                                     continue;
                                 }
 

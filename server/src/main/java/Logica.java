@@ -99,7 +99,7 @@ public class Logica implements ILogica {
         return true;
     }
 
-    public boolean hitEnemy(int x, int y, int damage) {
+    public boolean hitEnemy(int numJogador, int x, int y, int damage) {
         if (x < 0 || x > 16 || y < 0 || y > 12 || this.enemies[x][y] == null) {
             return false;
         }
@@ -109,6 +109,14 @@ public class Logica implements ILogica {
         if (this.enemies[x][y].life <= 0) {
             this.enemies[x][y] = null;
             this.enemyCount--;
+
+            if (numJogador == 0) {
+                this.jogo.sendCommand(0, "ENEMYKILL", new String[] { "P1" });
+                this.jogo.sendCommand(1, "ENEMYKILL", new String[] { "P2" });
+            } else {
+                this.jogo.sendCommand(0, "ENEMYKILL", new String[] { "P2" });
+                this.jogo.sendCommand(1, "ENEMYKILL", new String[] { "P1" });
+            }
         }
 
         return true;
