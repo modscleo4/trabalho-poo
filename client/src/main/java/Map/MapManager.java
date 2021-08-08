@@ -35,7 +35,7 @@ public class MapManager {
         //layers[3].add(rele);
         //layers[2].add(slime);
 
-        map1 = new Map(layers, GameGlobals.maxW, GameGlobals.maxH, "bg1");
+        map1 = new Map(layers, GameGlobals.maxW, GameGlobals.maxH, "bg1", true);
 
         return map1;
     }
@@ -56,7 +56,7 @@ public class MapManager {
             }
         }
 
-        gridMap = new Map(layers, GameGlobals.maxW, GameGlobals.maxH, null);
+        gridMap = new Map(layers, GameGlobals.maxW, GameGlobals.maxH, null, false);
 
         gridMap.mount();
 

@@ -2,8 +2,9 @@ package UI;
 
 import java.awt.Graphics2D;
 
+import javax.swing.Timer;
+
 import Engine.GameGlobals;
-import Map.MapManager;
 import UI.Components.Text;
 
 public class NetLoadScreen extends UI {
@@ -53,7 +54,15 @@ public class NetLoadScreen extends UI {
                 }
 
                 GameGlobals.netLoaded = true;
-                GameGlobals.map = MapManager.getMap1();
+
+                new Timer(1000, (ae) -> {
+                    if (!GameGlobals.result.equals("running")) {
+                        ((Timer) ae.getSource()).stop();
+                        return;
+                    }
+
+                    GameGlobals.map.runTimerCycle();
+                }).start();
 
                 this.ended = true;
 

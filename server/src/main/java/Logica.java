@@ -24,9 +24,9 @@ public class Logica implements ILogica {
         this.players.add(new Player(0, 3));
         this.players.add(new Player(16, 3));
         this.jogo.sendCommand(0, "READY", new String[] { "P1", "" + this.players.get(0).x, "" + this.players.get(0).y,
-                "" + this.players.get(1).x, "" + this.players.get(1).y });
+                "" + this.players.get(1).x, "" + this.players.get(1).y, "" + this.jogo.segundos });
         this.jogo.sendCommand(1, "READY", new String[] { "P2", "" + this.players.get(1).x, "" + this.players.get(1).y,
-                "" + this.players.get(0).x, "" + this.players.get(0).y });
+                "" + this.players.get(0).x, "" + this.players.get(0).y, "" + this.jogo.segundos });
 
         Timer en = new Timer(2000, (ae) -> {
             if (!roda.get()) {
@@ -43,7 +43,12 @@ public class Logica implements ILogica {
                 return;
             }
 
-            this.jogo.segundos--;
+            if (this.jogo.segundos > 0) {
+                this.jogo.segundos--;
+            } else {
+                roda.set(false);
+                ((Timer) ae.getSource()).stop();
+            }
         });
 
         Timer t = new Timer(10000, (ae) -> {
@@ -65,17 +70,35 @@ public class Logica implements ILogica {
 
         en.start();
         t.start();
+        jogo.start();
 
         new Thread(() -> {
-            while (this.jogo.clienteVivo[0] && this.jogo.clienteVivo[1] && this.jogo.segundos > 0) {
+            while (this.jogo.clienteVivo[0] && this.jogo.clienteVivo[1] && this.jogo.segundos > 0 && roda.get()) {
                 //
             }
 
+            System.out.println("Fim de jogo");
+
             roda.set(false);
-            this.jogo.sendCommand(0, "END", new String[] {
-                    this.players.get(0).score > this.players.get(1).score && this.jogo.clienteVivo[0] ? "P1" : "P2" });
-            this.jogo.sendCommand(1, "END", new String[] {
-                    this.players.get(0).score > this.players.get(1).score && this.jogo.clienteVivo[0] ? "P2" : "P1" });
+
+            int P1pontos = this.players.get(0).score;
+            int P2pontos = this.players.get(1).score;
+
+            if (this.jogo.clienteVivo[0] && this.jogo.clienteVivo[1]) {
+                if (P1pontos == P2pontos) {
+                    this.jogo.sendCommand(0, "END", new String[] { "D" });
+                    this.jogo.sendCommand(1, "END", new String[] { "D" });
+                } else {
+                    this.jogo.sendCommand(0, "END", new String[] { P1pontos > P2pontos ? "P1" : "P2" });
+                    this.jogo.sendCommand(1, "END", new String[] { P1pontos > P2pontos ? "P2" : "P1" });
+                }
+            } else if (this.jogo.clienteVivo[0]) {
+                this.jogo.sendCommand(0, "END", new String[] { "P1" });
+                this.jogo.sendCommand(1, "END", new String[] { "P2" });
+            } else {
+                this.jogo.sendCommand(0, "END", new String[] { "P2" });
+                this.jogo.sendCommand(1, "END", new String[] { "P1" });
+            }
         }).start();
     }
 

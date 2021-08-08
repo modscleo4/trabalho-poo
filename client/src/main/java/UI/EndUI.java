@@ -19,17 +19,22 @@ public class EndUI extends UI {
 
     @Override
     public void draw(Graphics2D g) {
+        g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
+        g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
+
         this.txt.setAbsoluteCoords(true);
         this.txt.setCenterScreen(true);
+        this.txt.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
 
         if (GameGlobals.result == "won") {
             this.txt.setText("Venceu!");
             this.txt.setColor(Color.GREEN);
-            this.txt.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
         } else if (GameGlobals.result == "lost") {
             this.txt.setText("Perdeu.");
             this.txt.setColor(Color.RED);
-            this.txt.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
+        } else if (GameGlobals.result == "draw") {
+            this.txt.setText("Empate.");
+            this.txt.setColor(Color.GRAY);
         }
 
         this.txt.draw(g);

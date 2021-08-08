@@ -1,5 +1,7 @@
 package Map;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import Engine.SoundManager;
 import Entity.Enemy;
 import Entity.Entity;
 import Entity.Slime;
+import UI.Components.Text;
 
 public class Map {
     private List<BaseObject>[] sprites;
@@ -21,12 +24,24 @@ public class Map {
     private boolean bgPlaying = false;
     private Sound bgMusicHandler;
     private boolean initialized = false;
+    private int timer = 250;
+    private boolean useTimer;
 
-    public Map(List<BaseObject>[] sprites, int maxX, int maxY, String bgMusic) {
+    private Text txtTimer;
+
+    public Map(List<BaseObject>[] sprites, int maxX, int maxY, String bgMusic, boolean useTimer) {
         this.sprites = sprites;
         this.maxX = maxX;
         this.maxY = maxY;
         this.bgMusic = bgMusic;
+        this.useTimer = useTimer;
+
+        txtTimer = new Text("", 0, 0);
+        txtTimer.setAbsoluteCoords(true);
+        txtTimer.setCenterScreen(true);
+        txtTimer.setScreenY(50);
+        txtTimer.setColor(Color.WHITE);
+        txtTimer.setFont(new Font(Font.MONOSPACED, Font.BOLD, 24));
     }
 
     public BaseObject[][][] mount() {
@@ -53,6 +68,11 @@ public class Map {
                     this.getMap()[i][j][z].draw(g);
                 }
             }
+        }
+
+        if (this.useTimer) {
+            txtTimer.setText("" + this.timer);
+            txtTimer.draw(g);
         }
     }
 
@@ -163,5 +183,21 @@ public class Map {
 
             bgMusicHandler.pause();
         }
+    }
+
+    public int getTimer() {
+        return this.timer;
+    }
+
+    public void setTimer(int timer) {
+        if (timer < 0) {
+            return;
+        }
+
+        this.timer = timer;
+    }
+
+    public void runTimerCycle() {
+        this.setTimer(this.getTimer() - 1);
     }
 }

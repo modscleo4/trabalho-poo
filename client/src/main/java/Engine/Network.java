@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import Entity.Aubrey;
 import Entity.Omori;
 import Entity.Slime;
+import Map.MapManager;
 
 /* P1 - OMOLI, P2 - AUBREY */
 
@@ -96,6 +97,7 @@ public class Network {
                     int y1 = Integer.parseInt(args[2]);
                     int x2 = Integer.parseInt(args[3]);
                     int y2 = Integer.parseInt(args[4]);
+                    int t = Integer.parseInt(args[5]);
 
                     if (args[0].equals("P1")) {
                         GameGlobals.player = new Omori(x1, y1);
@@ -105,7 +107,11 @@ public class Network {
                         GameGlobals.player2 = new Omori(x2, y2);
                     }
 
+                    GameGlobals.map = MapManager.getMap1();
+                    GameGlobals.map.setTimer(t);
+
                     this.ready = true;
+
                     break;
                 }
 
@@ -176,6 +182,16 @@ public class Network {
                         GameGlobals.player.setScore(GameGlobals.player.getScore() + 10);
                     } else if (args[0].equals("P2")) {
                         GameGlobals.player2.setScore(GameGlobals.player2.getScore() + 10);
+                    }
+                }
+
+                case "END": {
+                    if (args[0].equals("P1")) {
+                        GameGlobals.result = "won";
+                    } else if (args[0].equals("P2")) {
+                        GameGlobals.result = "lost";
+                    } else if (args[0].equals("D")) {
+                        GameGlobals.result = "draw";
                     }
                 }
 

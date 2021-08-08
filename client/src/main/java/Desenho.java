@@ -103,24 +103,15 @@ public class Desenho extends JPanel {
 
         GameGlobals.uiLayer.draw(g);
 
-        if (GameGlobals.result.equals("won")) {
-            g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
-            g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
-
+        if (!GameGlobals.result.equals("running")) {
             endUI.setVisible(true);
             endUI.draw(g);
-        } else if (GameGlobals.result.equals("lost")) {
-            g.setColor(new Color(0, 0, 0, (int) 255 * 10 / 100));
-            g.fillRect(0, 0, GameGlobals.width, GameGlobals.height);
-
-            endUI.setVisible(true);
-            endUI.draw(g);
+        } else {
+            GameGlobals.internalClock++;
         }
 
         pauseUI.setVisible(GameGlobals.paused);
         pauseUI.draw(g);
-
-        GameGlobals.internalClock++;
     }
 
     @Override
