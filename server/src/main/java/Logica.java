@@ -110,6 +110,8 @@ public class Logica implements ILogica {
             this.enemies[x][y] = null;
             this.enemyCount--;
 
+            this.players.get(numJogador).score += 10;
+
             if (numJogador == 0) {
                 this.jogo.sendCommand(0, "ENEMYKILL", new String[] { "P1" });
                 this.jogo.sendCommand(1, "ENEMYKILL", new String[] { "P2" });

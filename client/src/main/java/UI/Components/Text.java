@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
 
 public class Text extends Component {
     private String text;
@@ -30,13 +31,12 @@ public class Text extends Component {
 
     @Override
     public int getWidth() {
-        return (int) this.getFont().getStringBounds(this.getText(), new FontRenderContext(null, true, true)).getWidth();
+        return (int) Text.getStringBounds(this.getText(), this.getFont()).getWidth();
     }
 
     @Override
     public int getHeight() {
-        return (int) this.getFont().getStringBounds(this.getText(), new FontRenderContext(null, true, true))
-                .getHeight();
+        return (int) Text.getStringBounds(this.getText(), this.getFont()).getHeight();
     }
 
     public String getText() {
@@ -82,5 +82,9 @@ public class Text extends Component {
         g.setFont(this.getFont());
         g.setColor(this.getColor());
         g.drawString(this.getText(), this.getScreenX(), this.getScreenY() + this.getHeight() / 2);
+    }
+
+    public static Rectangle2D getStringBounds(String text, Font font) {
+        return font.getStringBounds(text, new FontRenderContext(null, true, true));
     }
 }

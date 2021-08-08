@@ -14,6 +14,7 @@ import Engine.GameGlobals;
 import Engine.Settings;
 import Engine.SoundManager;
 import Engine.Sprite;
+import UI.Components.Text;
 import Util.Pair;
 
 public abstract class Player extends GameEntity {
@@ -148,12 +149,12 @@ public abstract class Player extends GameEntity {
         this.life = life;
     }
 
-    public int getScore(){
+    public int getScore() {
         return this.score;
     }
 
-    public void setScore(){
-        this.score = (this.getScore()+1);
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public int getDamage() {
@@ -294,13 +295,17 @@ public abstract class Player extends GameEntity {
         });
     }
 
-    public void drawScore(Graphics2D g){
+    public void drawScore(Graphics2D g) {
+        g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
+
         if (this.name.equals("omori")) {
             g.setColor(Color.RED);
-            g.drawString(String.format("%d", this.getScore()), 48, 48);
-        }else{
+            g.drawString("" + this.getScore(), 48, 48);
+        } else {
             g.setColor(Color.BLUE);
-            g.drawString(String.format("%d", this.getScore()), 720, 48);
+            g.drawString("" + this.getScore(),
+                    GameGlobals.width - 48 - (int) Text.getStringBounds("" + this.getScore(), g.getFont()).getWidth(),
+                    48);
         }
     }
 

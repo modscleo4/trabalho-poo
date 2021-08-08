@@ -173,9 +173,9 @@ public class Network {
 
                 case "ENEMYKILL": {
                     if (args[0].equals("P1")) {
-                        GameGlobals.player.setScore();
+                        GameGlobals.player.setScore(GameGlobals.player.getScore() + 10);
                     } else if (args[0].equals("P2")) {
-                        GameGlobals.player2.setScore();
+                        GameGlobals.player2.setScore(GameGlobals.player2.getScore() + 10);
                     }
                 }
 
