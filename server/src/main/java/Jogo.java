@@ -10,6 +10,7 @@ public class Jogo implements IJogo {
     int contaJogadoresConectados = 0;
     Logica logica;
     boolean continua = true;
+    int segundos = 250;
     boolean clienteVivo[] = { true, true };
 
     public void adicionaJogador(Socket clientSocket) {

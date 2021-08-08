@@ -94,7 +94,7 @@ public abstract class GameEntity extends Entity {
             this.setDirection("up");
 
             if (!this.isAbsoluteCoords()) {
-                if (this.getY() == 0 || GameGlobals.map.collide(this, this.getX(), this.getY() - 1)) {
+                if (this.getY() == 3 || GameGlobals.map.collide(this, this.getX(), this.getY() - 1)) {
                     this.isMoving = false;
                     callback.run();
                     return;
