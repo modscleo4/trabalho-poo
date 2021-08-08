@@ -24,6 +24,7 @@ public abstract class Player extends GameEntity {
 
     private String name;
     private int life = 200;
+    private int score = 0;
     private int minDamage = 5;
     private int maxDamage = 10;
     private int takenDamage = 0;
@@ -145,6 +146,14 @@ public abstract class Player extends GameEntity {
         this.damageThread.start();
 
         this.life = life;
+    }
+
+    public int getScore(){
+        return this.score;
+    }
+
+    public void setScore(){
+        this.score = (this.getScore()+1);
     }
 
     public int getDamage() {
@@ -271,6 +280,8 @@ public abstract class Player extends GameEntity {
 
         GameGlobals.uiLayer.addLayer(g2 -> {
             this.drawLifeBar(g2);
+            this.drawScore(g2);
+            System.out.println(this.score);
             if (this.takenDamage > 0) {
                 g2.setColor(Color.RED);
                 g2.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
@@ -283,29 +294,39 @@ public abstract class Player extends GameEntity {
         });
     }
 
+    public void drawScore(Graphics2D g){
+        if (this.name.equals("omori")) {
+            g.setColor(Color.RED);
+            g.drawString(String.format("%d", this.getScore()), 48, 48);
+        }else{
+            g.setColor(Color.BLUE);
+            g.drawString(String.format("%d", this.getScore()), 720, 48);
+        }
+    }
+
     public void drawLifeBar(Graphics2D g) {
         if (this.name.equals("omori")) {
-            Sprite heart = new Sprite("omori/icon/0", 4, 4, false);
+            Sprite heart = new Sprite("omori/icon/0", 0, 4, false);
             heart.setAbsoluteCoords(true);
-            heart.setWidth(24);
-            heart.setHeight(24);
+            heart.setWidth(48);
+            heart.setHeight(48);
             heart.draw(g);
             g.setColor(Color.BLACK);
-            g.fillRect(32, 8, 8 * 20, 16);
+            g.fillRect(48, 8, 8 * 20, 16);
 
             g.setColor(Color.RED);
-            g.fillRect(32, 8, 8 * this.getLife() / 10, 16);
+            g.fillRect(48, 8, 8 * this.getLife() / 10, 16);
         } else {
-            Sprite heart = new Sprite("aubrey/icon/0", 788, 4, false);
+            Sprite heart = new Sprite("aubrey/icon/0", 768, 4, false);
             heart.setAbsoluteCoords(true);
-            heart.setWidth(24);
-            heart.setHeight(24);
+            heart.setWidth(48);
+            heart.setHeight(48);
             heart.draw(g);
             g.setColor(Color.BLACK);
-            g.fillRect(624, 8, 8 * 20, 16);
+            g.fillRect(608, 8, 8 * 20, 16);
 
             g.setColor(Color.BLUE);
-            g.fillRect(624, 8, 8 * this.getLife() / 10, 16);
+            g.fillRect(608, 8, 8 * this.getLife() / 10, 16);
         }
     }
 }

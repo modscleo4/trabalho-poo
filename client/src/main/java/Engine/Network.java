@@ -171,6 +171,14 @@ public class Network {
                     break;
                 }
 
+                case "ENEMYKILL": {
+                    if (args[0].equals("P1")) {
+                        GameGlobals.player.setScore();
+                    } else if (args[0].equals("P2")) {
+                        GameGlobals.player2.setScore();
+                    }
+                }
+
                 default:
                     break;
             }
